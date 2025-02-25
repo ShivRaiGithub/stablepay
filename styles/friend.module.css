@@ -1,0 +1,114 @@
+.container {
+    max-width: 600px;
+    margin: 40px auto;
+    padding: 20px;
+    background-color: #121212;
+    color: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    text-align: center;
+}
+
+/* Scoped h2 inside .container */
+.container h2 {
+    margin-bottom: 15px;
+    font-size: 22px;
+    color: #00aaff;
+}
+
+/* Scoped input inside .container */
+.container input {
+    width: 80%;
+    padding: 10px;
+    margin: 8px 0;
+    border: 1px solid #444;
+    border-radius: 8px;
+    background: #222;
+    color: white;
+    font-size: 16px;
+    outline: none;
+}
+
+/* Scoped button inside .container */
+.container button {
+    padding: 10px 15px;
+    margin: 10px 5px;
+    border: none;
+    border-radius: 8px;
+    background: #00aaff;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.container button:hover {
+    background: #0088cc;
+}
+
+/* Friends List */
+.friendCard {
+    background: #1a1a1a;
+    padding: 15px;
+    margin: 10px 0;
+    border-radius: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.friendCard span {
+    flex: 1;
+    text-align: left;
+}
+
+/* Notifications */
+.notificationContainer {
+    text-align: right;
+    margin-bottom: 10px;
+}
+
+.notificationButton {
+    position: relative;
+    padding: 8px 12px;
+    background: #00aaff;
+    color: white;
+    border-radius: 8px;
+}
+
+.redDot {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    width: 10px;
+    height: 10px;
+    background: red;
+    border-radius: 50%;
+}
+
+.notificationPopup {
+    background: #1a1a1a;
+    border-radius: 8px;
+    padding: 10px;
+    position: absolute;
+    right: 10px;
+    width: 250px;
+    box-shadow: 0 2px 8px rgba(255, 255, 255, 0.1);
+}
+
+.notification {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px 0;
+    border-bottom: 1px solid #333;
+}
+
+/* Scoped notification button inside .notification */
+.notification button {
+    background: transparent;
+    color: red;
+    border: none;
+    cursor: pointer;
+}

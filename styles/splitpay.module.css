@@ -1,0 +1,215 @@
+/* General container */
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    min-height: 100vh;
+    background-color: #121212; /* Blackish background */
+    color: #ffffff; /* White text */
+    padding: 20px;
+  }
+  
+  /* Heading */
+  .heading {
+    font-size: 24px;
+    margin-bottom: 15px;
+  }
+  
+  /* Toggle Buttons (Include Me / Exclude Me) */
+  .toggleContainer {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+  
+  .toggleButton, .activeButton {
+    padding: 10px 15px;
+    font-size: 14px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: 0.3s ease;
+    border: 1px solid #1e90ff;
+    background-color: transparent;
+    color: white;
+  }
+  
+  .activeButton {
+    background-color: #1e90ff; /* Active blue */
+    color: white;
+  }
+  
+  .toggleButton:hover {
+    background-color: rgba(30, 144, 255, 0.3);
+  }
+  
+  /* Input Fields */
+  .input {
+    width: 100%;
+    max-width: 400px;
+    padding: 10px;
+    border: 1px solid #1e90ff; /* Bluish border */
+    background-color: #222;
+    color: white;
+    border-radius: 5px;
+    outline: none;
+    margin-bottom: 10px;
+  }
+  
+  .input::placeholder {
+    color: #888;
+  }
+  
+  /* Add/Update Button */
+  .addButton {
+    width: 100%;
+    max-width: 200px;
+    padding: 10px;
+    background-color: #1e90ff;
+    border: none;
+    color: white;
+    font-size: 14px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: 0.3s ease;
+  }
+  
+  .addButton:hover {
+    background-color: #0f6cd3;
+  }
+  
+  /* Address List */
+  .addressList {
+    width: 100%;
+    max-width: 400px;
+    list-style: none;
+    padding: 0;
+    margin-top: 10px;
+  }
+  
+  .addressItem {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #1a1a1a;
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    font-size: 14px;
+  }
+  
+  .addressItem button {
+    padding: 5px 10px;
+    font-size: 12px;
+    background-color: #ffcc00;
+    border: none;
+    color: black;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: 0.3s ease;
+  }
+  
+  .addressItem button:hover {
+    background-color: #e6b800;
+  }
+  
+  /* Payment Section */
+  .buttonContainer {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    margin-top: 20px;
+  }
+  
+  /* Pay Button */
+  .payButton {
+    padding: 12px 20px;
+    background-color: #1e90ff;
+    border: none;
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: 0.3s ease;
+  }
+  
+  .payButton:hover {
+    background-color: #0f6cd3;
+  }
+  
+  /* Dropdown (Select Chain) */
+  .dropdownContainer {
+    position: relative;
+  }
+  
+  .chainButton {
+    padding: 10px;
+    background-color: #1e90ff;
+    border: none;
+    color: white;
+    font-size: 14px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: 0.3s ease;
+  }
+  
+  .chainButton:hover {
+    background-color: #0f6cd3;
+  }
+  
+  .dropdownMenu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background-color: #1a1a1a;
+    border-radius: 5px;
+    width: 100%;
+    box-shadow: 0px 4px 6px rgba(255, 255, 255, 0.1);
+    z-index: 10;
+  }
+  
+  .dropdownMenu div {
+    padding: 10px;
+    cursor: pointer;
+    transition: 0.3s ease;
+  }
+  
+  .dropdownMenu div:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+  }
+  
+  /* Friends List */
+  .friendList {
+    margin-top: 20px;
+    width: 100%;
+    max-width: 400px;
+  }
+  
+  .friendItem {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #1a1a1a;
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    font-size: 14px;
+  }
+  
+  .friendItem button {
+    padding: 5px 10px;
+    background-color: #1e90ff;
+    border: none;
+    color: white;
+    font-size: 12px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: 0.3s ease;
+  }
+  
+  .friendItem button:hover {
+    background-color: #0f6cd3;
+  }
+  
