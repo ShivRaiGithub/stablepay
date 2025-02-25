@@ -1,0 +1,81 @@
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-color: #000;
+  }
+  
+  /* .profileCard {
+    background: #1e3a8a;
+    padding: 2rem;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    width: 400px;
+    color: white;
+  } */
+  
+  .title {
+    font-size: 1.8rem;
+    margin-bottom: 1rem;
+  }
+  
+  .walletSection {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #0d47a1;
+    padding: 0.7rem 1rem;
+    border-radius: 8px;
+    margin-bottom: 1.5rem;
+    font-size: 1rem;
+  }
+  
+  .walletText {
+    flex-grow: 1;
+    text-align: left;
+    font-weight: bold;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+  
+  .toggleButton {
+    background-color: #4a90e2;
+    border: none;
+    color: white;
+    padding: 5px 10px;
+    font-size: 0.9rem;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: 0.3s;
+  }
+  
+  .toggleButton:hover {
+    background-color: #357abd;
+  }
+  
+  .buttonContainer {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+  }
+  
+  .actionButton {
+    background-color: #2563eb;
+    border: none;
+    color: white;
+    padding: 10px 15px;
+    font-size: 1rem;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: 0.3s;
+    width: 100%;
+  }
+  
+  .actionButton:hover {
+    background-color: #1e40af;
+  }
+  

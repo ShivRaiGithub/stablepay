@@ -1,0 +1,25 @@
+/* Index.tsx */
+
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #121212;
+  }
+  
+  .loginButton {
+    padding: 12px 24px;
+    font-size: 16px;
+    color: white;
+    background-color: #007bff;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.3s ease-in-out;
+  }
+  
+  .loginButton:hover {
+    background-color: #0056b3;
+  }
+  
