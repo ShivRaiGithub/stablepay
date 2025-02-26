@@ -1,19 +1,31 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styles from "../styles/solopay.module.css";
+import { useRouter } from "next/router";
 
 import { createWalletClient, custom, encodeFunctionData } from "viem";
 
 import {USDC_APPROVE_ABI, chains} from "../data/constants";
 
+import { ConnectedWallet } from "@privy-io/react-auth";
 
-const SoloPay = ({wallets : any}) => {
+
+const SoloPay = () => {
+  const router = useRouter();
+  const [wallets, setWallets] = useState<ConnectedWallet[]>([]);
   const [address, setAddress] = useState("");
-  const [amount, setAmount] = useState("");
+  const [amount, setAmount] = useState(0);
   const [selectedChain, setSelectedChain] = useState("Ehereum");
   const [showDropdown, setShowDropdown] = useState(false);
   const selectedNetwork="Mainnet";
 
-  const handleSendTransaction = async (friend: any) => {
+
+  useEffect(() => {
+    if (router.query.wallets) {
+      setWallets(JSON.parse(router.query.wallets as string));
+    }
+  }, [router.query.wallets]);
+
+  const handleSendTransaction = async (walletAddress: string) => {
     const wallet = wallets[0];
     if (!wallet) return;
     const chainData = chains[selectedNetwork][selectedChain];
@@ -32,7 +44,7 @@ const SoloPay = ({wallets : any}) => {
         data: encodeFunctionData({
             abi: USDC_APPROVE_ABI,
             functionName: "transfer",
-            args: [friend.walletAddress, 100000n],
+            args: [walletAddress as `0x${string}`, BigInt(amount * 1000000)],
         }),
     }).then(console.log).catch(console.error);
 };
@@ -52,9 +64,10 @@ const SoloPay = ({wallets : any}) => {
         type="number"
         placeholder="Enter amount"
         value={amount}
-        onChange={(e) => setAmount(e.target.value)}
+        onChange={(e) => setAmount(Number(e.target.value))}
         className={styles.input}
       />
+
       <div className={styles.buttonContainer}>
         <button onClick={ async() => {handleSendTransaction(address)}} className={styles.payButton}>Pay</button>
         <div className={styles.dropdownContainer}>
