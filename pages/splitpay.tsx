@@ -1,99 +1,148 @@
-import React, { useState } from "react";
-import { friends as initialFriends } from "../data/friend";
+import React, { useState, useEffect } from "react";
 import styles from "../styles/splitpay.module.css";
+import { useRouter } from "next/router";
+const FaArrowLeft = require("react-icons/fa").FaArrowLeft;
 
 const SplitPay = () => {
-  const [address, setAddress] = useState("");
+  const router = useRouter();
+  const [recipient, setRecipient] = useState("");
   const [amount, setAmount] = useState("");
-  const [selectedChain, setSelectedChain] = useState("Chain 1");
-  const [showDropdown, setShowDropdown] = useState(false);
-  const [addressList, setAddressList] = useState<string[]>([]);
-  const [friends] = useState(initialFriends);
-  const [includeMe, setIncludeMe] = useState(true);
-  const [editingIndex, setEditingIndex] = useState<number | null>(null);
+  const [addresses, setAddresses] = useState<{ id: number; address: string }[]>([]);
+  const [friends, setFriends] = useState([
+    { name: "John Doe", address: "0xAbC123456789Ef123456789AbCdEf1234567890" },
+    { name: "Jane Smith", address: "0xDef456789AbCdEf123456789AbCdEf123456789C1" },
+    { name: "Alice Johnson", address: "0x123AbCdEf456789dEf123456789AbCdEf1234567" },
+  ]);
+  const [selectedNet, setSelectedNet] = useState("Select Net");
+  const [isDarkTheme, setIsDarkTheme] = useState(false);
+
+  useEffect(() => {
+    const themeState = localStorage.getItem("darkTheme");
+    setIsDarkTheme(themeState === "true");
+  }, []);
+
+  const handleToggle = () => {
+    const newThemeState = !isDarkTheme;
+    setIsDarkTheme(newThemeState);
+    localStorage.setItem("darkTheme", newThemeState.toString());
+  };
 
   const handleAddAddress = () => {
-    if (!address) return;
-    if (editingIndex !== null) {
-      const updatedList = [...addressList];
-      updatedList[editingIndex] = address;
-      setAddressList(updatedList);
-      setEditingIndex(null);
-    } else {
-      setAddressList([...addressList, address]);
-    }
-    setAddress("");
-  };
-
-  const handleEditAddress = (index: number) => {
-    setAddress(addressList[index] ?? "");
-    setEditingIndex(index);
-  };
-
-  const handleAddFriend = (friendAddress: string) => {
-    if (!addressList.includes(friendAddress)) {
-      setAddressList([...addressList, friendAddress]);
+    if (recipient.trim() !== "") {
+      setAddresses([...addresses, { id: Date.now(), address: recipient }]);
+      setRecipient("");
     }
   };
 
-  const handlePay = () => {
-    alert(`Paying ${amount} to ${includeMe ? "Me + " : ""}${addressList.join(", ")} on ${selectedChain}`);
+  const handleDeleteAddress = (id: number) => {
+    setAddresses(addresses.filter((addr) => addr.id !== id));
+  };
+
+  const handleEditAddress = (id: number) => {
+    const newAddress = prompt("Edit address:");
+    if (newAddress) {
+      setAddresses(addresses.map((addr) => (addr.id === id ? { ...addr, address: newAddress } : addr)));
+    }
+  };
+
+  const handleAddFriend = (friend: { name: string; address: string }) => {
+    if (!addresses.some((addr) => addr.address === friend.address)) {
+      setAddresses([...addresses, { id: Date.now(), address: friend.address }]);
+      setFriends(friends.filter((f) => f.address !== friend.address));
+    }
   };
 
   return (
-    <div className={styles.container}>
-      <h2>Split Payment</h2>
-      <div className={styles.toggleContainer}>
-        <button onClick={() => setIncludeMe(true)} className={includeMe ? styles.activeButton : styles.toggleButton}>Include Me</button>
-        <button onClick={() => setIncludeMe(false)} className={!includeMe ? styles.activeButton : styles.toggleButton}>Exclude Me</button>
+    <div className={`${styles.container} ${isDarkTheme ? styles.darkTheme : ""}`}>
+      {/* Top Bar */}
+      <div className={styles.topBar}>
+        <button className={`${styles.backButton} ${isDarkTheme ? styles.greenButton : ""}`} onClick={() => router.back()}>
+          <FaArrowLeft size={24} />
+        </button>
+        <label className={styles.toggleSwitch}>
+          <input type="checkbox" checked={isDarkTheme} onChange={handleToggle} />
+          <span className={styles.slider}></span>
+        </label>
       </div>
+      <h1 className={`${styles.title} ${isDarkTheme ? styles.greenText : ""}`}>Split Payment</h1>
+      <div className={styles.toggleButtons}>
+        <button className={styles.includeButton}>Include Me</button>
+        <button className={styles.excludeButton}>Exclude Me</button>
+      </div>
+
+      {/* Input Fields */}
       <input
         type="text"
-        placeholder="Enter recipient address"
-        value={address}
-        onChange={(e) => setAddress(e.target.value)}
         className={styles.input}
+        placeholder="Enter recipient address"
+        value={recipient}
+        onChange={(e) => setRecipient(e.target.value)}
       />
-      <button onClick={handleAddAddress} className={styles.addButton}>{editingIndex !== null ? "Update" : "Add"}</button>
-      <ul className={styles.addressList}>
-        {addressList.map((addr, index) => (
-          <li key={index} className={styles.addressItem}>
-            {addr} <button onClick={() => handleEditAddress(index)}>Edit</button>
-          </li>
-        ))}
-      </ul>
       <input
-        type="number"
+        type="text"
+        className={styles.input}
         placeholder="Enter amount"
         value={amount}
         onChange={(e) => setAmount(e.target.value)}
-        className={styles.input}
       />
-      <div className={styles.buttonContainer}>
-        <button onClick={handlePay} className={styles.payButton}>Pay</button>
-        <div className={styles.dropdownContainer}>
-          <button onClick={() => setShowDropdown(!showDropdown)} className={styles.chainButton}>
-            {selectedChain} ▼
-          </button>
-          {showDropdown && (
-            <div className={styles.dropdownMenu}>
-              {["Chain 1", "Chain 2", "Chain 3"].map((chain) => (
-                <div key={chain} onClick={() => { setSelectedChain(chain); setShowDropdown(false); }}>
-                  {chain}
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
+      <input
+        type="text"
+        className={styles.input}
+        placeholder="Contributor"
+        value={amount}
+        onChange={(e) => setAmount(e.target.value)}
+      />
+      <button className={`${styles.addButton} ${isDarkTheme ? styles.greenButton : ""}`} onClick={handleAddAddress}>
+        Add
+      </button>
+
+      {/* Pay & Select Chain Buttons */}
+      <div className={styles.paymentControls}>
+        <button className={`${styles.payButton} ${isDarkTheme ? styles.greenButton : ""}`}>Pay</button>
+        <select className={styles.chainSelect}>
+          <option>Chain 1</option>
+          <option>Chain 2</option>
+          <option>Chain 3</option>
+        </select>
+        {isDarkTheme && (
+          <select className={styles.selectNet} onChange={(e) => setSelectedNet(e.target.value)}>
+            <option value="net1">Net 1</option>
+            <option value="net2">Net 2</option>
+            <option value="net3">Net 3</option>
+          </select>
+        )}
       </div>
-      <h3>Friends List</h3>
-      <ul className={styles.friendList}>
-        {friends.map((friend) => (
-          <li key={friend.id} className={styles.friendItem}>
-            {friend.name} - {friend.walletAddress} <button onClick={() => handleAddFriend(friend.walletAddress)}>Add</button>
-          </li>
+
+      {/* Added Addresses List */}
+      {addresses.length > 0 && (
+        <div className={styles.addressList}>
+          {addresses.map((addr) => (
+            <div key={addr.id} className={styles.addressItem}>
+              <span>{addr.address}</span>
+              <button className={`${styles.editButton} ${isDarkTheme ? styles.greenButton : ""}`} onClick={() => handleEditAddress(addr.id)}>Edit</button>
+              <button className={`${styles.deleteButton} ${isDarkTheme ? styles.greenButton : ""}`} onClick={() => handleDeleteAddress(addr.id)}>Delete</button>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* Friends List */}
+      <h2 className={styles.friendsTitle}>Friends List</h2>
+      <div className={styles.friendsList}>
+        {friends.map((friend, index) => (
+          <div key={index} className={styles.friendItem}>
+            <span>
+              {friend.name} - {friend.address}
+            </span>
+            <button
+              className={`${styles.addFriendButton} ${isDarkTheme ? styles.greenButton : ""}`}
+              onClick={() => handleAddFriend(friend)}
+            >
+              Add
+            </button>
+          </div>
         ))}
-      </ul>
+      </div>
     </div>
   );
 };
