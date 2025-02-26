@@ -1,6 +1,12 @@
 import "../styles/globals.css";
 import type { AppProps } from "next/app";
 import Head from "next/head";
+import "../styles/globals.css";
+import { PrivyProvider } from "@privy-io/react-auth";
+
+
+import { anvil, localhost, mainnet, arbitrum, base, polygon, optimism, sepolia, arbitrumSepolia, baseSepolia, optimismSepolia } from "viem/chains";
+
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
@@ -39,7 +45,19 @@ function MyApp({ Component, pageProps }: AppProps) {
         <title>Privy Auth Starter</title>
         <meta name="description" content="Privy Auth Starter" />
       </Head>
+        
+      <PrivyProvider
+        appId={process.env.NEXT_PUBLIC_PRIVY_APP_ID || ""}
+        config={{
+          defaultChain: mainnet, 
+          embeddedWallets: {
+            createOnLogin: "all-users",
+          },
+          supportedChains: [ anvil, localhost, mainnet, arbitrum, base, polygon, optimism, sepolia, arbitrumSepolia, baseSepolia, optimismSepolia ],
+        }}
+      >
         <Component {...pageProps} />
+      </PrivyProvider>
     </>
   );
 }
