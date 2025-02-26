@@ -1,0 +1,79 @@
+.container {
+    background: #000;
+    color: white;
+    min-height: 100vh;
+    padding: 20px;
+    text-align: center;
+  }
+  
+  .topBar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    max-width: 500px;
+    margin: 0 auto 20px;
+  }
+  
+  .backButton {
+    background: transparent;
+    border: none;
+    color: white;
+    cursor: pointer;
+  }
+  
+  .title {
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: #00AAFF;
+  }
+  
+  .notificationsList {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    max-width: 500px;
+    margin: auto;
+  }
+  
+  .notificationItem {
+    background: #222;
+    padding: 10px;
+    border-radius: 8px;
+  }
+  
+  .emptyMessage {
+    color: #bbb;
+    font-size: 1rem;
+  }
+  
+  .clearButton {
+    margin-top: 20px;
+    padding: 10px 15px;
+    background: red;
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background 0.3s;
+  }
+  
+  .clearButton:hover {
+    background: darkred;
+  }
+  
+  .deleteButton {
+    background-color: red;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+    border-radius: 5px;
+    margin-left: 50px;
+    transition: background-color 0.2s ease-in-out;
+  }
+  
+  .deleteButton:hover {
+    background-color: darkred;
+  }
+  

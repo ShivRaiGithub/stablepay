@@ -1,215 +1,341 @@
-/* General container */
 .container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    min-height: 100vh;
-    background-color: #121212; /* Blackish background */
-    color: #ffffff; /* White text */
-    padding: 20px;
-  }
-  
-  /* Heading */
-  .heading {
-    font-size: 24px;
-    margin-bottom: 15px;
-  }
-  
-  /* Toggle Buttons (Include Me / Exclude Me) */
-  .toggleContainer {
-    display: flex;
-    gap: 10px;
-    margin-bottom: 20px;
-  }
-  
-  .toggleButton, .activeButton {
-    padding: 10px 15px;
-    font-size: 14px;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: 0.3s ease;
-    border: 1px solid #1e90ff;
-    background-color: transparent;
-    color: white;
-  }
-  
-  .activeButton {
-    background-color: #1e90ff; /* Active blue */
-    color: white;
-  }
-  
-  .toggleButton:hover {
-    background-color: rgba(30, 144, 255, 0.3);
-  }
-  
-  /* Input Fields */
-  .input {
-    width: 100%;
-    max-width: 400px;
-    padding: 10px;
-    border: 1px solid #1e90ff; /* Bluish border */
-    background-color: #222;
-    color: white;
-    border-radius: 5px;
-    outline: none;
-    margin-bottom: 10px;
-  }
-  
-  .input::placeholder {
-    color: #888;
-  }
-  
-  /* Add/Update Button */
-  .addButton {
-    width: 100%;
-    max-width: 200px;
-    padding: 10px;
-    background-color: #1e90ff;
-    border: none;
-    color: white;
-    font-size: 14px;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: 0.3s ease;
-  }
-  
-  .addButton:hover {
-    background-color: #0f6cd3;
-  }
-  
-  /* Address List */
-  .addressList {
-    width: 100%;
-    max-width: 400px;
-    list-style: none;
-    padding: 0;
-    margin-top: 10px;
-  }
-  
-  .addressItem {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background-color: #1a1a1a;
-    padding: 10px;
-    border-radius: 5px;
-    margin-bottom: 10px;
-    font-size: 14px;
-  }
-  
-  .addressItem button {
-    padding: 5px 10px;
-    font-size: 12px;
-    background-color: #ffcc00;
-    border: none;
-    color: black;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: 0.3s ease;
-  }
-  
-  .addressItem button:hover {
-    background-color: #e6b800;
-  }
-  
-  /* Payment Section */
-  .buttonContainer {
-    display: flex;
-    gap: 10px;
-    align-items: center;
-    margin-top: 20px;
-  }
-  
-  /* Pay Button */
-  .payButton {
-    padding: 12px 20px;
-    background-color: #1e90ff;
-    border: none;
-    color: white;
-    font-size: 16px;
-    font-weight: bold;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: 0.3s ease;
-  }
-  
-  .payButton:hover {
-    background-color: #0f6cd3;
-  }
-  
-  /* Dropdown (Select Chain) */
-  .dropdownContainer {
-    position: relative;
-  }
-  
-  .chainButton {
-    padding: 10px;
-    background-color: #1e90ff;
-    border: none;
-    color: white;
-    font-size: 14px;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: 0.3s ease;
-  }
-  
-  .chainButton:hover {
-    background-color: #0f6cd3;
-  }
-  
-  .dropdownMenu {
-    position: absolute;
-    top: 100%;
-    left: 0;
-    background-color: #1a1a1a;
-    border-radius: 5px;
-    width: 100%;
-    box-shadow: 0px 4px 6px rgba(255, 255, 255, 0.1);
-    z-index: 10;
-  }
-  
-  .dropdownMenu div {
-    padding: 10px;
-    cursor: pointer;
-    transition: 0.3s ease;
-  }
-  
-  .dropdownMenu div:hover {
-    background-color: rgba(255, 255, 255, 0.2);
-  }
-  
-  /* Friends List */
-  .friendList {
-    margin-top: 20px;
-    width: 100%;
-    max-width: 400px;
-  }
-  
-  .friendItem {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background-color: #1a1a1a;
-    padding: 10px;
-    border-radius: 5px;
-    margin-bottom: 10px;
-    font-size: 14px;
-  }
-  
-  .friendItem button {
-    padding: 5px 10px;
-    background-color: #1e90ff;
-    border: none;
-    color: white;
-    font-size: 12px;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: 0.3s ease;
-  }
-  
-  .friendItem button:hover {
-    background-color: #0f6cd3;
-  }
-  
+  background: #000;
+  color: white;
+  min-height: 100vh;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  background: #000;
+  color: #fff;
+  width: 100vw;
+  min-height: 100vh; /* Ensures the black background covers all content */
+  padding: 20px;
+}
+
+.topBar {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  padding: 35px;
+}
+
+.container {
+  background: #000;
+  color: white;
+  min-height: 100vh;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  width: 100vw;
+  padding: 20px;
+}
+
+.darkTheme .backButton,
+.darkTheme .payButton,
+.darkTheme .addButton,
+.darkTheme .editButton,
+.darkTheme .deleteButton,
+.darkTheme .addFriendButton {
+  background: #00cc00;
+  color: white;
+}
+
+.darkTheme .title {
+  color: white;
+}
+
+.topBar {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  padding: 35px;
+}
+
+.backButton {
+  background: #00AAFF;
+  border: none;
+  color: white;
+  cursor: pointer;
+  transition: opacity 0.3s, background 0.3s;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10%;
+}
+
+.backButton:hover {
+  background: #0088cc;
+  opacity: 0.9;
+}
+
+.toggleSwitch {
+  position: relative;
+  display: inline-block;
+  width: 34px;
+  height: 20px;
+}
+
+.toggleSwitch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  transition: .4s;
+  border-radius: 10px;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 14px;
+  width: 14px;
+  left: 3px;
+  bottom: 3px;
+  background-color: white;
+  transition: .4s;
+  border-radius: 50%;
+}
+
+input:checked + .slider {
+  background-color: #00cc00;
+}
+
+input:checked + .slider:before {
+  transform: translateX(14px);
+}
+
+.selectNet {
+  background-color: #00cc00;
+  color: white;
+  border: 1px solid white;
+  padding: 8px;
+  border-radius: 5px;
+  width: 100px;
+}
+
+.backButton,
+.notificationButton {
+  background: #00AAFF;
+  border: none;
+  color: white;
+  cursor: pointer;
+  transition: opacity 0.3s, background 0.3s;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10%;
+}
+
+.backButton:hover,
+.notificationButton:hover {
+  background: #0088cc;
+  opacity: 0.9;
+}
+
+.title {
+  font-size: 5rem;
+  color: #00AAFF;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.toggleButtons {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.includeButton,
+.excludeButton {
+  padding: 10px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  font-weight: bold;
+  transition: all 0.3s ease;
+  width: 120px;
+  text-align: center;
+}
+
+.includeButton {
+  background: #007bff;
+  color: white;
+}
+
+.excludeButton {
+  background: #ff4757;
+  color: white;
+}
+
+.includeButton:hover,
+.excludeButton:hover {
+  opacity: 0.8;
+}
+
+.input {
+  width: 40%;
+  padding: 10px;
+  margin-bottom: 10px;
+  border-radius: 8px;
+  border: none;
+  background: #222;
+  color: white;
+  text-align: center;
+}
+
+.addButton {
+  width: 40%;
+  padding: 10px;
+  background: #007bff;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.addButton:hover {
+  background: #0056b3;
+}
+
+.paymentControls {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  margin-top: 10px;
+  width: 100%;
+}
+
+.payButton {
+  width: 40%;
+  padding: 10px;
+  background: #28a745;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.payButton:hover {
+  background: #218838;
+}
+
+.chainSelect {
+  width: 40%;
+  padding: 10px;
+  border-radius: 8px;
+  border: none;
+  background: #222;
+  color: white;
+  text-align: center;
+}
+
+.addressList {
+  margin-top: 20px;
+  width: 40%;
+}
+
+.addressItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #222;
+  padding: 10px;
+  border-radius: 8px;
+  margin-bottom: 10px;
+}
+
+.editButton,
+.deleteButton {
+  padding: 5px 10px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.8rem;
+}
+
+.editButton {
+  background: #ffc107;
+  color: black;
+}
+
+.deleteButton {
+  background: #dc3545;
+  color: white;
+}
+
+.editButton:hover,
+.deleteButton:hover {
+  opacity: 0.8;
+}
+
+.friendsTitle {
+  margin-top: 20px;
+  font-size: 1.2rem;
+  text-align: center;
+}
+
+.friendsList {
+  margin-top: 10px;
+  width: 40%;
+}
+
+.friendItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #222;
+  padding: 8px;
+  border-radius: 8px;
+  margin-bottom: 10px;
+}
+
+.friendItem span {
+  font-size: 0.85rem;
+  max-width: 70%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.addFriendButton {
+  background: #007bff;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.addFriendButton:hover {
+  background: #0056b3;
+}

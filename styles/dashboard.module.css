@@ -1,96 +1,357 @@
 .container {
-    max-width: 800px;
-    margin: 40px auto;
-    padding: 20px;
-    background-color: #121212;
-    color: white;
-    border-radius: 12px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-    text-align: center;
-    position: relative;
-  }
-  
-  .welcomeText {
-    font-size: 24px;
-    font-weight: bold;
-    margin-bottom: 10px;
-  }
-  
-  .walletAddress {
-    font-size: 16px;
-    margin-bottom: 20px;
-    color: #00aaff;
-  }
-  
-  .buttonContainer {
     display: flex;
     flex-direction: column;
-    gap: 10px;
-    margin-top: 20px;
-  }
-  
-  .navButton {
-    padding: 12px;
-    border: none;
-    border-radius: 8px;
-    background: #00aaff;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    background-color: #000;
     color: white;
-    font-size: 16px;
-    cursor: pointer;
-    transition: background 0.3s ease;
-  }
-  
-  .navButton:hover {
-    background: #0088cc;
-  }
-  
-  /* Notification Styles */
-  .notificationContainer {
+    font-family: "Poppins", sans-serif;
+    position: relative;
+}
+
+.greenTheme {
+    background-color: #000;
+    color: #aaffaa;
+}
+
+.welcomeText {
+    font-size: 5rem;
+    font-weight: bold;
+    color: #0af;
+    margin-bottom: 4rem;
+    text-align: center;
+}
+
+.topRightContainer {
+    display: flex;
+    align-items: center;
+    gap: 15px;
     position: absolute;
     top: 10px;
-    right: 10px;
+    right: 20px;
+}
+
+.toggleSwitch {
+    position: relative;
+    display: inline-block;
+    width: 34px;
+    height: 20px;
+}
+
+.toggleSwitch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: .4s;
+    border-radius: 10px;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 14px;
+    width: 14px;
+    left: 3px;
+    bottom: 3px;
+    background-color: white;
+    transition: .4s;
+    border-radius: 50%;
+}
+
+input:checked + .slider {
+    background-color: #4CAF50;
+}
+
+input:checked + .slider:before {
+    transform: translateX(14px);
+}
+
+.selectNet {
+    background-color: #004d00;
+    color: white;
+    border: 1px solid #aaffaa;
+    padding: 8px;
+    border-radius: 5px;
+    margin-top: 10px;
+}
+
+.greenTheme .navButton {
+    background: linear-gradient(145deg, #008000, #00cc00);
+    box-shadow: 0px 4px 10px rgba(0, 255, 0, 0.5);
+}
+
+.greenTheme .navButton:hover {
+    background: #00cc00;
+    box-shadow: 0px 0px 15px rgba(0, 255, 0, 0.8);
+}
+
+.greenTheme .welcomeText{
+    color: #00cc00;
+}
+
+.greenTheme .copyButton{
+    background: #00cc00;
+    color: #fff;
+}
+
+.greenTheme .logoutButton{
+    background: #00cc00;
+    color: #fff;
+}
+
+
+.welcomeText {
+    font-size: 5rem;
+    font-weight: bold;
+    color: #0af;
+    margin-bottom: 4rem;
+    text-align: center;
+}
+
+.topRightContainer {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    position: absolute;
+    top: 10px;
+    right: 20px;
+}
+
+.toggleSwitch {
+    position: relative;
+    display: inline-block;
+    width: 34px;
+    height: 20px;
+}
+
+.toggleSwitch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: .4s;
+    border-radius: 10px;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 14px;
+    width: 14px;
+    left: 3px;
+    bottom: 3px;
+    background-color: white;
+    transition: .4s;
+    border-radius: 50%;
+}
+
+input:checked + .slider {
+    background-color: #4CAF50;
+}
+
+input:checked + .slider:before {
+    transform: translateX(14px);
+}
+
+.welcomeText {
+    font-size: 5rem;
+    font-weight: bold;
+    color: #0af;
+    margin-bottom: 4rem;
+    text-align: center;
+}
+  
+.header {
+    width: 100%;
+    text-align: center;
+    margin-bottom: 20px;
+}
+  
+.stablePayTitle {
+    font-size: 3rem;
+    font-weight: bold;
+    color: #0af;
+    text-shadow: 0px 0px 10px rgba(0, 170, 255, 0.8);
+    margin-bottom: 10px;
+}
+  
+.walletAddress {
+    font-size: 1.2rem;
+    color: #ccc;
+    background: rgba(255, 255, 255, 0.1);
+    padding: 8px 15px;
+    border-radius: 10px;
+    display: inline-block;
+}
+
+.notificationContainer {
+    position: absolute;
+    top: 20px;
+    right: 30px;
+}
+
+.notificationButton {
+    position: relative;
+    padding: 10px;
+    border-radius: 10%;
+    background: #008cff;
+    border: none;
+    color: #fff;
+    cursor: pointer;
+    transition: opacity 0.3s;
   }
   
-  .notificationButton {
+  .greenTheme .notificationButton{
     position: relative;
-    padding: 8px 12px;
-    background: #00aaff;
-    color: white;
-    border-radius: 8px;
+    padding: 10px;
+    border-radius: 10%;
+    background: #00cc00;
+    border: none;
+    color: #fff;
+    cursor: pointer;
+    transition: opacity 0.3s;
+  }
+
+  .notificationButton:hover {
+    opacity: 0.7;
   }
   
   .redDot {
     position: absolute;
-    top: 5px;
-    right: 5px;
+    top: 2px;
+    right: 2px;
     width: 10px;
     height: 10px;
     background: red;
     border-radius: 50%;
   }
   
-  .notificationPopup {
-    background: #1a1a1a;
-    border-radius: 8px;
-    padding: 10px;
+
+.notificationPopup {
     position: absolute;
     right: 0;
+    top: 40px;
     width: 250px;
-    box-shadow: 0 2px 8px rgba(255, 255, 255, 0.1);
-  }
-  
-  .notification {
+    background: rgba(20, 20, 20, 0.9);
+    border: 1px solid #333;
+    padding: 10px;
+    border-radius: 8px;
+    box-shadow: 0px 0px 10px rgba(255, 255, 255, 0.2);
+}
+
+.notification {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 5px 0;
-    border-bottom: 1px solid #333;
+    padding: 8px;
+    border-bottom: 1px solid #444;
+}
+
+.notification button {
+    background: red;
+    border: none;
+    color: white;
+    padding: 4px 8px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.notification button:hover {
+    background: darkred;
+}
+
+.buttonContainer {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+    gap: 15px;
+}
+
+.navButton {
+    background: linear-gradient(145deg, #0af, #008cff);
+    color: white;
+    border: none;
+    padding: 12px 18px;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+    box-shadow: 0px 4px 10px rgba(0, 170, 255, 0.5);
+}
+
+.navButton:hover {
+    background: #008cff;
+    box-shadow: 0px 0px 15px rgba(0, 170, 255, 0.8);
+    /* transform: scale(1.1); */
+}
+
+.navButton:active {
+    transform: scale(0.95);
+}
+
+.walletContainer {
+    display: flex;
+    align-items: center;
+    gap: 10px;
   }
   
-  .notification button {
-    background: transparent;
-    color: red;
+  .copyButton {
+    background-color: #007bff;
+    color: white;
     border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
     cursor: pointer;
+    transition: background 0.3s ease;
+    margin-left: 5px;
   }
+  
+  .copyButton:hover {
+    background-color: #0056b3;
+  }
+
+  .topRightContainer {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    position: absolute;
+    top: 10px;
+    right: 20px;
+  }
+  
+  .logoutButton {
+    background-color: #008cff;
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+  }
+  
+  .logoutButton:hover {
+    background-color: #cc0000;
+  }
+  
   

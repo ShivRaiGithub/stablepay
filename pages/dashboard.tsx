@@ -1,44 +1,55 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import styles from "../styles/dashboard.module.css";
+const FaBell = require("react-icons/fa").FaBell;
 
 const Dashboard = () => {
   const router = useRouter();
-  const [walletAddress] = useState("0x1234...abcd"); // Placeholder wallet address
+  const [walletAddress] = useState("0xAbC123456789dEf123456789AbCdEf1234567890"); // Placeholder wallet address
   const [notifications, setNotifications] = useState<string[]>([]);
-  const [showNotifications, setShowNotifications] = useState(false);
+  const [copied, setCopied] = useState(false);
+  const [isGreenTheme, setIsGreenTheme] = useState(false);
 
-  const handleDeleteNotification = (index: number) => {
-    setNotifications(notifications.filter((_, i) => i !== index));
+  useEffect(() => {
+    const storedNotifications = JSON.parse(localStorage.getItem("notifications") || "[]");
+    setNotifications(storedNotifications);
+  }, []);
+
+  const handleCopyWallet = () => {
+    navigator.clipboard.writeText(walletAddress);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
+  const handleLogout = () => {
+    alert("Logging out...");
   };
 
   return (
-    <div className={styles.container}>
-      {/* Notification Button */}
-      <div className={styles.notificationContainer}>
-        <button className={styles.notificationButton} onClick={() => setShowNotifications(!showNotifications)}>
-          Notifications {notifications.length > 0 && <span className={styles.redDot}></span>}
+    <div className={`${styles.container} ${isGreenTheme ? styles.greenTheme : ""}`}>
+      {/* Top Right - Bell Icon, Toggle Button, and Logout */}
+      <div className={styles.topRightContainer}>
+        <button className={styles.notificationButton} onClick={() => router.push("/notification")}>
+          <FaBell />
+          {notifications.length > 0 && <span className={styles.redDot}></span>}
         </button>
-        {showNotifications && (
-          <div className={styles.notificationPopup}>
-            {notifications.length > 0 ? (
-              notifications.map((note, index) => (
-                <div key={index} className={styles.notification}>
-                  <span>{note}</span>
-                  <button onClick={() => handleDeleteNotification(index)}>X</button>
-                </div>
-              ))
-            ) : (
-              <p>No new notifications</p>
-            )}
-          </div>
-        )}
+        <label className={styles.toggleSwitch}>
+          <input type="checkbox" onChange={() => setIsGreenTheme(!isGreenTheme)} />
+          <span className={styles.slider}></span>
+        </label>
+        <button className={styles.logoutButton} onClick={handleLogout}>Logout</button>
       </div>
-      
-      {/* Welcome Section */}
       <h1 className={styles.welcomeText}>Welcome to StablePay</h1>
-      <p className={styles.walletAddress}>Wallet: {walletAddress}</p>
-      
+      <div className={styles.walletContainer}>
+        <p className={styles.walletAddress}>
+          Wallet:<span className={styles.addressText}>{walletAddress}
+          <button className={styles.copyButton} onClick={handleCopyWallet}>
+            {copied ? "Copied!" : "Copy"}
+          </button>
+          </span>
+        </p>
+      </div>
+
       {/* Navigation Buttons */}
       <div className={styles.buttonContainer}>
         <button onClick={() => router.push("/fund-wallet")} className={styles.navButton}>Fund Wallet</button>

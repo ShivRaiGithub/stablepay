@@ -11,9 +11,13 @@ const IndexPage: React.FC = () => {
 
   return (
     <div className={styles.container}>
-      <button onClick={handleLogin} className={styles.loginButton}>
-        Log in
-      </button>
+      <div className={styles.content}>
+        <h1 className={styles.title}>StablePay</h1>
+        <p className={styles.subtitle}>Fast and Secure Transactions for Everyone</p>
+        <button onClick={handleLogin} className={styles.loginButton}>
+          Log in
+        </button>
+      </div>
     </div>
   );
 };
