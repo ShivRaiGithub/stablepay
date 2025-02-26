@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import styles from "../styles/splitpay.module.css";
 import { useRouter } from "next/router";
 const FaArrowLeft = require("react-icons/fa").FaArrowLeft;
+import { chains } from "../data/constants"; // Import the chains data
 
 const SplitPay = () => {
   const router = useRouter();
@@ -13,19 +14,32 @@ const SplitPay = () => {
     { name: "Jane Smith", address: "0xDef456789AbCdEf123456789AbCdEf123456789C1" },
     { name: "Alice Johnson", address: "0x123AbCdEf456789dEf123456789AbCdEf1234567" },
   ]);
-  const [selectedNet, setSelectedNet] = useState("Select Net");
+  const [selectedNet, setSelectedNet] = useState("Testnet");
+  const [selectedChain, setSelectedChain] = useState("");
   const [isDarkTheme, setIsDarkTheme] = useState(false);
 
   useEffect(() => {
-    const themeState = localStorage.getItem("darkTheme");
-    setIsDarkTheme(themeState === "true");
+    const themeState = localStorage.getItem("darkTheme") === "true";
+    setIsDarkTheme(themeState);
+
+    const network = themeState ? "Testnet" : "Mainnet";
+    setSelectedNet(network);
+    setSelectedChain(Object.keys(chains[network])[0] || "Select Chain"); // Set first chain
   }, []);
 
   const handleToggle = () => {
     const newThemeState = !isDarkTheme;
     setIsDarkTheme(newThemeState);
     localStorage.setItem("darkTheme", newThemeState.toString());
+
+    const network = newThemeState ? "Testnet" : "Mainnet";
+    setSelectedNet(network);
+    setSelectedChain(Object.keys(chains[network])[0] || "Select Chain"); // Set first chain when switching theme
   };
+
+  useEffect(() => {
+    setSelectedChain(Object.keys(chains[selectedNet])[0] || "Select Chain"); // Ensure first chain is selected when network changes
+  }, [selectedNet]);
 
   const handleAddAddress = () => {
     if (recipient.trim() !== "") {
@@ -64,6 +78,7 @@ const SplitPay = () => {
           <span className={styles.slider}></span>
         </label>
       </div>
+
       <h1 className={`${styles.title} ${isDarkTheme ? styles.greenText : ""}`}>Split Payment</h1>
       <div className={styles.toggleButtons}>
         <button className={styles.includeButton}>Include Me</button>
@@ -96,19 +111,24 @@ const SplitPay = () => {
         Add
       </button>
 
-      {/* Pay & Select Chain Buttons */}
+      {/* Pay & Network Selection */}
       <div className={styles.paymentControls}>
         <button className={`${styles.payButton} ${isDarkTheme ? styles.greenButton : ""}`}>Pay</button>
-        <select className={styles.chainSelect}>
-          <option>Chain 1</option>
-          <option>Chain 2</option>
-          <option>Chain 3</option>
+
+        {/* Chain Selection Dropdown */}
+        <select className={styles.chainSelect} value={selectedChain} onChange={(e) => setSelectedChain(e.target.value)}>
+          {Object.keys(chains[selectedNet]).map((chain) => (
+            <option key={chain} value={chain}>
+              {chain}
+            </option>
+          ))}
         </select>
+
+        {/* Network Selection (only when Dark Theme is active) */}
         {isDarkTheme && (
-          <select className={styles.selectNet} onChange={(e) => setSelectedNet(e.target.value)}>
-            <option value="net1">Net 1</option>
-            <option value="net2">Net 2</option>
-            <option value="net3">Net 3</option>
+          <select className={styles.selectNet} value={selectedNet} onChange={(e) => setSelectedNet(e.target.value)}>
+            <option value="Testnet">Testnet</option>
+            <option value="Local">Localnet</option>
           </select>
         )}
       </div>
