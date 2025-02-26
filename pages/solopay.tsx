@@ -3,24 +3,79 @@ import { useRouter } from "next/router";
 import styles from "../styles/solopay.module.css";
 const { FaArrowLeft } = require("react-icons/fa");
 
+import { createWalletClient, custom, encodeFunctionData } from "viem";
+import { USDC_APPROVE_ABI, chains } from "../data/constants";
+import { ConnectedWallet } from "@privy-io/react-auth";
+
 const SoloPay = () => {
   const router = useRouter();
   const [address, setAddress] = useState("");
-  const [amount, setAmount] = useState("");
-  const [selectedChain, setSelectedChain] = useState("Select Chain");
+  const [amount, setAmount] = useState(0);
+  const [selectedNet, setSelectedNet] = useState("Testnet"); // Default network
+  const [selectedChain, setSelectedChain] = useState("");
   const [showDropdown, setShowDropdown] = useState(false);
-  const [selectedNet, setSelectedNet] = useState("Select Net ");
   const [isGreenTheme, setIsGreenTheme] = useState(false);
+  const [wallets, setWallets] = useState<ConnectedWallet[]>([]);
 
   useEffect(() => {
-    const themeState = localStorage.getItem("greenTheme");
-    setIsGreenTheme(themeState === "true");
+    if (router.query.wallets) {
+      setWallets(JSON.parse(router.query.wallets as string));
+    }
+  }, [router.query.wallets]);
+
+  useEffect(() => {
+    const themeState = localStorage.getItem("greenTheme") === "true";
+    setIsGreenTheme(themeState);
+
+    const network = themeState ? "Testnet" : "Mainnet";
+    setSelectedNet(network);
+    setSelectedChain(Object.keys(chains[network])[0]); // Set first chain
   }, []);
 
   const handleToggle = () => {
     const newThemeState = !isGreenTheme;
     setIsGreenTheme(newThemeState);
     localStorage.setItem("greenTheme", newThemeState.toString());
+
+    // Set network and default chain when toggling themes
+    const network = newThemeState ? "Testnet" : "Mainnet";
+    setSelectedNet(network);
+    setSelectedChain(Object.keys(chains[network])[0]);
+  };
+
+  // Determine the active network based on the theme
+  const selectedNetwork = isGreenTheme ? selectedNet : "Mainnet";
+
+  useEffect(() => {
+    setSelectedChain(Object.keys(chains[selectedNetwork])[0]); // Update chain when network changes
+  }, [selectedNetwork]);
+
+  const handleSendTransaction = async (walletAddress: string) => {
+    const wallet = wallets[0];
+    if (!wallet || !selectedChain) return;
+
+    const chainData = chains[selectedNetwork][selectedChain];
+    await wallet.switchChain(chainData.chain.id);
+
+    const provider = await wallet.getEthereumProvider();
+    const walletClient = createWalletClient({
+      chain: chainData.chain,
+      transport: custom(provider),
+    });
+
+    await walletClient
+      .sendTransaction({
+        account: wallet.address as `0x${string}`,
+        to: chainData.usdcAddress,
+        chain: chainData.chain,
+        data: encodeFunctionData({
+          abi: USDC_APPROVE_ABI,
+          functionName: "transfer",
+          args: [walletAddress as `0x${string}`, BigInt(amount * 1000000)],
+        }),
+      })
+      .then(console.log)
+      .catch(console.error);
   };
 
   return (
@@ -49,11 +104,36 @@ const SoloPay = () => {
         <input
           placeholder="Enter amount"
           value={amount}
-          onChange={(e) => setAmount(e.target.value)}
+          onChange={(e) => setAmount(Number(e.target.value))}
           className={styles.input}
         />
+
         <div className={styles.buttonContainer}>
-          <button className={`${styles.payButton} ${isGreenTheme ? styles.greenButton : ""}`}>Pay</button>
+          <button
+            onClick={async () => {
+              handleSendTransaction(address);
+            }}
+            className={`${styles.payButton} ${isGreenTheme ? styles.greenButton : ""}`}
+          >
+            Pay
+          </button>
+
+          {/* Network Selection Dropdown (only when Green Theme is active) */}
+          {isGreenTheme && (
+            <select
+              className={styles.selectNet}
+              value={selectedNet}
+              onChange={(e) => {
+                setSelectedNet(e.target.value);
+                setSelectedChain(Object.keys(chains[e.target.value])[0]); // Select first chain of new network
+              }}
+            >
+              <option value="Testnet">Testnet</option>
+              <option value="Local">Localnet</option>
+            </select>
+          )}
+
+          {/* Chain Selection Dropdown */}
           <div className={styles.dropdownContainer}>
             <button
               onClick={() => setShowDropdown(!showDropdown)}
@@ -63,7 +143,7 @@ const SoloPay = () => {
             </button>
             {showDropdown && (
               <div className={styles.dropdownMenu}>
-                {["Chain 1", "Chain 2", "Chain 3"].map((chain) => (
+                {Object.keys(chains[selectedNetwork]).map((chain) => (
                   <div
                     key={chain}
                     onClick={() => {
@@ -77,13 +157,6 @@ const SoloPay = () => {
               </div>
             )}
           </div>
-          {isGreenTheme && (
-            <select className={styles.selectNet} onChange={(e) => setSelectedNet(e.target.value)}>
-              <option value="net1">Net 1</option>
-              <option value="net2">Net 2</option>
-              <option value="net3">Net 3</option>
-            </select>
-          )}
         </div>
       </div>
     </div>
