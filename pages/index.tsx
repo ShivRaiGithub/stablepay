@@ -46,7 +46,7 @@ const IndexPage: React.FC = () => {
       <div className={styles.content}>
         <h1 className={styles.title}>StablePay</h1>
         <p className={styles.subtitle}>Fast and Secure Transactions for Everyone</p>
-        <button onClick={handleLogin} className={styles.loginButton}>
+        <button onClick={login} className={styles.loginButton}>
           Log in
         </button>
       </div>

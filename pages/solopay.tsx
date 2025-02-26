@@ -4,10 +4,6 @@ import { useRouter } from "next/router";
 import styles from "../styles/solopay.module.css";
 const { FaArrowLeft } = require("react-icons/fa");
 
-
-import styles from "../styles/solopay.module.css";
-import { useRouter } from "next/router";
-
 import { createWalletClient, custom, encodeFunctionData } from "viem";
 
 import {USDC_APPROVE_ABI, chains} from "../data/constants";
@@ -18,10 +14,10 @@ import { ConnectedWallet } from "@privy-io/react-auth";
 const SoloPay = () => {
   const router = useRouter();
   const [address, setAddress] = useState("");
-  const [amount, setAmount] = useState("");
+  const [amount, setAmount] = useState(0);
   const [selectedChain, setSelectedChain] = useState("Select Chain");
   const [showDropdown, setShowDropdown] = useState(false);
-  const [selectedNet, setSelectedNet] = useState("Select Net ");
+  const [selectedNet, setSelectedNet] = useState("Testnet");
   const [isGreenTheme, setIsGreenTheme] = useState(false);
   const [wallets, setWallets] = useState<ConnectedWallet[]>([]);
   const selectedNetwork="Mainnet";
