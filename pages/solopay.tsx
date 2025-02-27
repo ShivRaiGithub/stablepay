@@ -3,18 +3,20 @@ import { useRouter } from "next/router";
 import styles from "../styles/solopay.module.css";
 const { FaArrowLeft } = require("react-icons/fa");
 
+import { useDeveloperTheme } from "../context/DeveloperThemeContext";
+
 import { createWalletClient, custom, encodeFunctionData } from "viem";
 import { USDC_APPROVE_ABI, chains } from "../data/constants";
 import { ConnectedWallet } from "@privy-io/react-auth";
 
 const SoloPay = () => {
   const router = useRouter();
+  const { isDeveloperTheme } = useDeveloperTheme(); // Get theme state from context
   const [address, setAddress] = useState("");
   const [amount, setAmount] = useState(0);
-  const [selectedNet, setSelectedNet] = useState("Testnet"); // Default network
-  const [selectedChain, setSelectedChain] = useState("");
+  const [selectedNet, setSelectedNet] = useState(isDeveloperTheme ? "Testnet" : "Mainnet"); // Default network based on theme
+  const [selectedChain, setSelectedChain] = useState(Object.keys(chains[selectedNet])[0]); // First chain of the network
   const [showDropdown, setShowDropdown] = useState(false);
-  const [isGreenTheme, setIsGreenTheme] = useState(false);
   const [wallets, setWallets] = useState<ConnectedWallet[]>([]);
 
   useEffect(() => {
@@ -23,32 +25,14 @@ const SoloPay = () => {
     }
   }, [router.query.wallets]);
 
+  // Update network and chain when the theme changes
   useEffect(() => {
-    const themeState = localStorage.getItem("greenTheme") === "true";
-    setIsGreenTheme(themeState);
-
-    const network = themeState ? "Testnet" : "Mainnet";
+    const network = isDeveloperTheme ? "Testnet" : "Mainnet";
     setSelectedNet(network);
-    setSelectedChain(Object.keys(chains[network])[0]); // Set first chain
-  }, []);
+    setSelectedChain(Object.keys(chains[network])[0]); // Reset chain
+  }, [isDeveloperTheme]);
 
-  const handleToggle = () => {
-    const newThemeState = !isGreenTheme;
-    setIsGreenTheme(newThemeState);
-    localStorage.setItem("greenTheme", newThemeState.toString());
-
-    // Set network and default chain when toggling themes
-    const network = newThemeState ? "Testnet" : "Mainnet";
-    setSelectedNet(network);
-    setSelectedChain(Object.keys(chains[network])[0]);
-  };
-
-  // Determine the active network based on the theme
-  const selectedNetwork = isGreenTheme ? selectedNet : "Mainnet";
-
-  useEffect(() => {
-    setSelectedChain(Object.keys(chains[selectedNetwork])[0]); // Update chain when network changes
-  }, [selectedNetwork]);
+  const selectedNetwork = isDeveloperTheme ? selectedNet : "Mainnet";
 
   const handleSendTransaction = async (walletAddress: string) => {
     const wallet = wallets[0];
@@ -79,21 +63,17 @@ const SoloPay = () => {
   };
 
   return (
-    <div className={`${styles.container} ${isGreenTheme ? styles.greenTheme : ""}`}>
-      {/* Top Bar with Back Button and Toggle */}
+    <div className={`${styles.container} ${isDeveloperTheme ? styles.greenTheme : ""}`}>
+      {/* Top Bar with Back Button */}
       <div className={styles.topBar}>
         <button className={styles.backButton} onClick={() => router.back()}>
           <FaArrowLeft />
         </button>
-        <label className={styles.toggleSwitch}>
-          <input type="checkbox" checked={isGreenTheme} onChange={handleToggle} />
-          <span className={styles.slider}></span>
-        </label>
       </div>
 
       {/* Centered Solo Payment UI */}
       <div className={styles.content}>
-        <h2 className={`${styles.title} ${isGreenTheme ? styles.greenText : ""}`}>Solo Payment</h2>
+        <h2 className={`${styles.title} ${isDeveloperTheme ? styles.greenText : ""}`}>Solo Payment</h2>
         <input
           type="text"
           placeholder="Enter recipient address"
@@ -113,13 +93,13 @@ const SoloPay = () => {
             onClick={async () => {
               handleSendTransaction(address);
             }}
-            className={`${styles.payButton} ${isGreenTheme ? styles.greenButton : ""}`}
+            className={`${styles.payButton} ${isDeveloperTheme ? styles.greenButton : ""}`}
           >
             Pay
           </button>
 
           {/* Network Selection Dropdown (only when Green Theme is active) */}
-          {isGreenTheme && (
+          {isDeveloperTheme && (
             <select
               className={styles.selectNet}
               value={selectedNet}
@@ -137,7 +117,7 @@ const SoloPay = () => {
           <div className={styles.dropdownContainer}>
             <button
               onClick={() => setShowDropdown(!showDropdown)}
-              className={`${styles.chainButton} ${isGreenTheme ? styles.greenButton : ""}`}
+              className={`${styles.chainButton} ${isDeveloperTheme ? styles.greenButton : ""}`}
             >
               {selectedChain} ▼
             </button>

@@ -192,7 +192,7 @@ input:checked + .slider:before {
 }
 
 .excludeButton {
-  background: #ff4757;
+  background: #007bff;
   color: white;
 }
 

@@ -3,6 +3,8 @@ import type { AppProps } from "next/app";
 import Head from "next/head";
 import "../styles/globals.css";
 import { PrivyProvider } from "@privy-io/react-auth";
+import { DeveloperThemeProvider } from "../context/DeveloperThemeContext";
+
 
 
 import { anvil, localhost, mainnet, arbitrum, base, polygon, optimism, sepolia, arbitrumSepolia, baseSepolia, optimismSepolia } from "viem/chains";
@@ -11,6 +13,8 @@ import { anvil, localhost, mainnet, arbitrum, base, polygon, optimism, sepolia, 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
     <>
+        <DeveloperThemeProvider>
+
       <Head>
         <link
           rel="preload"
@@ -55,9 +59,11 @@ function MyApp({ Component, pageProps }: AppProps) {
           },
           supportedChains: [ anvil, localhost, mainnet, arbitrum, base, polygon, optimism, sepolia, arbitrumSepolia, baseSepolia, optimismSepolia ],
         }}
-      >
+        >
         <Component {...pageProps} />
       </PrivyProvider>
+
+    </DeveloperThemeProvider>
     </>
   );
 }

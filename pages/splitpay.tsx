@@ -3,9 +3,11 @@ import styles from "../styles/splitpay.module.css";
 import { useRouter } from "next/router";
 const FaArrowLeft = require("react-icons/fa").FaArrowLeft;
 import { chains } from "../data/constants"; // Import the chains data
+import { useDeveloperTheme } from "../context/DeveloperThemeContext";
 
 const SplitPay = () => {
   const router = useRouter();
+  const { isDeveloperTheme } = useDeveloperTheme();
   const [recipient, setRecipient] = useState("");
   const [amount, setAmount] = useState("");
   const [contributor, setContributor] = useState(""); // Separate contributor input state
@@ -15,31 +17,13 @@ const SplitPay = () => {
     { name: "Jane Smith", address: "0xDef456789AbCdEf123456789AbCdEf123456789C1" },
     { name: "Alice Johnson", address: "0x123AbCdEf456789dEf123456789AbCdEf1234567" },
   ]);
-  const [selectedNet, setSelectedNet] = useState("Testnet");
+  const [selectedNet, setSelectedNet] = useState(isDeveloperTheme ? "Testnet" : "Mainnet");
   const [selectedChain, setSelectedChain] = useState("");
-  const [isDarkTheme, setIsDarkTheme] = useState(false);
+  const [includeMe, setIncludeMe] = useState(1); // 1 for Include Me, 0 for Exclude Me
+
 
   useEffect(() => {
-    const themeState = localStorage.getItem("darkTheme") === "true";
-    setIsDarkTheme(themeState);
-
-    const network = themeState ? "Testnet" : "Mainnet";
-    setSelectedNet(network);
-    setSelectedChain(Object.keys(chains[network])[0] || "Select Chain"); // Set first chain
-  }, []);
-
-  const handleToggle = () => {
-    const newThemeState = !isDarkTheme;
-    setIsDarkTheme(newThemeState);
-    localStorage.setItem("darkTheme", newThemeState.toString());
-
-    const network = newThemeState ? "Testnet" : "Mainnet";
-    setSelectedNet(network);
-    setSelectedChain(Object.keys(chains[network])[0] || "Select Chain"); // Set first chain when switching theme
-  };
-
-  useEffect(() => {
-    setSelectedChain(Object.keys(chains[selectedNet])[0] || "Select Chain"); // Ensure first chain is selected when network changes
+    setSelectedChain(Object.keys(chains[selectedNet])[0] || "Select Chain"); // Set first chain
   }, [selectedNet]);
 
   const handleAddAddress = () => {
@@ -74,24 +58,32 @@ const SplitPay = () => {
   };
 
   return (
-    <div className={`${styles.container} ${isDarkTheme ? styles.darkTheme : ""}`}>
+    <div className={`${styles.container} ${isDeveloperTheme ? styles.darkTheme : ""}`}>
       {/* Top Bar */}
       <div className={styles.topBar}>
-        <button className={`${styles.backButton} ${isDarkTheme ? styles.greenButton : ""}`} onClick={() => router.back()}>
+        <button className={`${styles.backButton} ${isDeveloperTheme ? styles.greenButton : ""}`} onClick={() => router.back()}>
           <FaArrowLeft size={24} />
         </button>
-        <label className={styles.toggleSwitch}>
-          <input type="checkbox" checked={isDarkTheme} onChange={handleToggle} />
-          <span className={styles.slider}></span>
-        </label>
+
       </div>
 
-      <h1 className={`${styles.title} ${isDarkTheme ? styles.greenText : ""}`}>Split Payment</h1>
+      <h1 className={`${styles.title} ${isDeveloperTheme ? styles.greenText : ""}`}>Split Payment</h1>
       <div className={styles.toggleButtons}>
-        <button className={styles.includeButton}>Include Me</button>
-        <button className={styles.excludeButton}>Exclude Me</button>
+        <button
+          className={`${styles.includeButton} ${includeMe === 1 ? styles.selected : ""}`}
+          onClick={() => setIncludeMe(1)}
+        >
+          Include Me
+        </button>
+        <button
+          className={`${styles.excludeButton} ${includeMe === 0 ? styles.selected : ""}`}
+          onClick={() => setIncludeMe(0)}
+        >
+          Exclude Me
+        </button>
       </div>
-      {/* Input Fields */}
+
+
       <input
         type="text"
         className={styles.input}
@@ -110,16 +102,16 @@ const SplitPay = () => {
         type="text"
         className={styles.input}
         placeholder="Contributor"
-        value={contributor} // Fixed: Using separate state
+        value={contributor}
         onChange={(e) => setContributor(e.target.value)}
       />
-      <button className={`${styles.addButton} ${isDarkTheme ? styles.greenButton : ""}`} onClick={handleAddContributor}>
+      <button className={`${styles.addButton} ${isDeveloperTheme ? styles.greenButton : ""}`} onClick={handleAddContributor}>
         Add Contributor
       </button>
 
       {/* Pay & Network Selection */}
       <div className={styles.paymentControls}>
-        <button className={`${styles.payButton} ${isDarkTheme ? styles.greenButton : ""}`}>Pay</button>
+        <button className={`${styles.payButton} ${isDeveloperTheme ? styles.greenButton : ""}`}>Pay</button>
 
         {/* Chain Selection Dropdown */}
         <select className={styles.chainSelect} value={selectedChain} onChange={(e) => setSelectedChain(e.target.value)}>
@@ -129,14 +121,6 @@ const SplitPay = () => {
             </option>
           ))}
         </select>
-
-        {/* Network Selection (only when Dark Theme is active) */}
-        {isDarkTheme && (
-          <select className={styles.selectNet} value={selectedNet} onChange={(e) => setSelectedNet(e.target.value)}>
-            <option value="Testnet">Testnet</option>
-            <option value="Local">Localnet</option>
-          </select>
-        )}
       </div>
 
       {/* Added Addresses List */}
@@ -145,7 +129,7 @@ const SplitPay = () => {
           {addresses.map((addr) => (
             <div key={addr.id} className={styles.addressItem}>
               <span>{addr.address}</span>
-              <button className={`${styles.deleteButton} ${isDarkTheme ? styles.greenButton : ""}`} onClick={() => handleDeleteAddress(addr.id)}>Delete</button>
+              <button className={`${styles.deleteButton} ${isDeveloperTheme ? styles.greenButton : ""}`} onClick={() => handleDeleteAddress(addr.id)}>Delete</button>
             </div>
           ))}
         </div>
@@ -160,7 +144,7 @@ const SplitPay = () => {
               {friend.name} - {friend.address}
             </span>
             <button
-              className={`${styles.addFriendButton} ${isDarkTheme ? styles.greenButton : ""}`}
+              className={`${styles.addFriendButton} ${isDeveloperTheme ? styles.greenButton : ""}`}
               onClick={() => handleAddFriend(friend)}
             >
               Add

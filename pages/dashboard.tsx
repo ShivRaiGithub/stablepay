@@ -9,16 +9,17 @@ import { useWallets } from "@privy-io/react-auth";
       
 const FaBell = require("react-icons/fa").FaBell;
 
+import { useDeveloperTheme } from "../context/DeveloperThemeContext";
 
 const Dashboard = () => {
   const router = useRouter();
   const {fundWallet} = useFundWallet();
   const {wallets} = useWallets();
-  const [walletAddress, setWalletAddress] = useState("...");  
+  const [walletAddress, setWalletAddress] = useState("Loading...");  
   const [notifications, setNotifications] = useState<string[]>([]);
   const [copied, setCopied] = useState(false);
-  const [isGreenTheme, setIsGreenTheme] = useState(false);
-
+  const { isDeveloperTheme, toggleTheme } = useDeveloperTheme();
+  
 const {ready, authenticated, logout} = usePrivy();
 
 
@@ -31,7 +32,7 @@ const {ready, authenticated, logout} = usePrivy();
 
 
   useEffect(() => {
-    setWalletAddress(wallets[0]?.address || "...");
+    setWalletAddress(wallets[0]?.address || "Loading...");
     const storedNotifications = JSON.parse(localStorage.getItem("notifications") || "[]");
     setNotifications(storedNotifications);
   }, [wallets]);
@@ -44,7 +45,7 @@ const {ready, authenticated, logout} = usePrivy();
   };
 
   return (
-    <div className={`${styles.container} ${isGreenTheme ? styles.greenTheme : ""}`}>
+    <div className={`${styles.container} ${isDeveloperTheme ? styles.greenTheme : ""}`}>
       {ready && authenticated ? (
         <div>
           <div className="flex flex-row justify-between">
@@ -59,9 +60,9 @@ const {ready, authenticated, logout} = usePrivy();
             <div className={styles.notificationContainer}>
             
               <label className={styles.toggleSwitch}>
-                <input type="checkbox" onChange={() => setIsGreenTheme(!isGreenTheme)} />
-                <span className={styles.slider}></span>
-              </label>
+              <input type="checkbox" checked={isDeveloperTheme} onChange={toggleTheme} />
+              <span className={styles.slider}></span>
+            </label>
               <button className={styles.logoutButton} onClick={logout}>Logout</button>
             </div>
           </div>
