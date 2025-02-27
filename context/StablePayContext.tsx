@@ -25,6 +25,7 @@ interface StablePayProviderProps {
 export const StablePayProvider = ({ children }: StablePayProviderProps) => {
   const [isDeveloperTheme, setIsDeveloperTheme] = useState(false);
   const [wallets, setWallets] = useState<ConnectedWallet[]>([]);
+  const [walletAddress, setWalletAddress] = useState("");
   const [friends, setFriends] = useState(initialFriends);
   const [notifications, setNotifications] = useState(initialNotifications);
 
@@ -33,7 +34,7 @@ export const StablePayProvider = ({ children }: StablePayProviderProps) => {
   };
 
   const getUserWallets = () => wallets;
-  const setUserWallets = (wallets: ConnectedWallet[]) => setWallets(wallets);
+  const setUserWallets = (wallets: ConnectedWallet[]) => setWallets(wallets);setWalletAddress(wallets[0]!.address); ;
   const getFriends = () => friends;
   const getNotifications = () => notifications;
 
