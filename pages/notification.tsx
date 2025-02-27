@@ -1,20 +1,24 @@
-import React from "react";
+import React, { useEffect } from "react";
 import styles from "../styles/notification.module.css";
 import { useRouter } from "next/router";
+import { FaArrowLeft } from "react-icons/fa";
 import { useStablePay } from "../context/StablePayContext";
-const FaArrowLeft = require("react-icons/fa").FaArrowLeft;
 
 const NotificationPage = () => {
   const router = useRouter();
-  const { notifications, setNotifications } = useStablePay();
+  const { notifications, getNotifications, setNotifications } = useStablePay();
 
-  const clearNotifications = () => {
-    setNotifications([]);
+  useEffect(() => {
+    getNotifications(); // Fetch notifications on component mount
+  }, []);
+
+  const clearNotifications = async () => {
+    await setNotifications([]); // Update backend and local state
   };
 
-  const deleteNotification = (index: number) => {
+  const deleteNotification = async (index: number) => {
     const updatedNotifications = notifications.filter((_, i) => i !== index);
-    setNotifications(updatedNotifications);
+    await setNotifications(updatedNotifications); // Update backend and local state
   };
 
   return (
@@ -26,16 +30,22 @@ const NotificationPage = () => {
         <h2 className={styles.title}>Notifications</h2>
       </div>
       <div className={styles.notificationsList}>
-        {notifications.length > 0 ? (
-          notifications.map((notif, index) => (
-            <div key={index} className={styles.notificationItem}>
-              {notif}
-              <button className={styles.deleteButton} onClick={() => deleteNotification(index)}>Delete</button>
-            </div>
-          ))
-        ) : (
-          <p className={styles.emptyMessage}>No new notifications</p>
-        )}
+      {notifications.length > 0 ? (
+  notifications.map((notif, index) => (
+    <div key={notif._id || index} className={styles.notificationItem}>
+      {notif.title}  {/* Access the title property */}
+      <button
+        className={styles.deleteButton}
+        onClick={() => deleteNotification(index)}
+      >
+        Delete
+      </button>
+    </div>
+  ))
+) : (
+  <p className={styles.emptyMessage}>No new notifications</p>
+)}
+
       </div>
       {notifications.length > 0 && (
         <button className={styles.clearButton} onClick={clearNotifications}>

@@ -6,60 +6,86 @@ import { useStablePay } from "../context/StablePayContext";
 
 const Friend = () => {
   const router = useRouter();  
-  const { getFriends } = useStablePay();
+  const { getFriends, setFriends } = useStablePay();
   const [name, setName] = useState("");
   const [walletAddress, setWalletAddress] = useState("");
   const [editWalletAddress, setEditWalletAddress] = useState<string | null>(null);
   const [payPopup, setPayPopup] = useState<string | null>(null);
   const [notifications, setNotifications] = useState<string[]>([]);
   const [showNotifications] = useState(false);
-  const [friends, setFriends] = useState<{ name: string; walletAddress: string }[]>([]);
+  const [friends, setFriendsState] = useState<{ name: string; address: string }[]>([]);
 
+  // Fetch Friends on Component Mount
   useEffect(() => {
-    setFriends(getFriends().map(friend => ({
-      name: friend.name,
-      walletAddress: friend.address
-    })));
-    
-  }, [getFriends]);
+    const fetchFriends = async () => {
+      const newFriends = await getFriends(); // Fetch friends
+      setFriendsState(newFriends); // Update local state
+    };
+  
+    fetchFriends();
+  }, []);
+  
 
-  const handleAddFriend = () => {
-    if (!name || !walletAddress) return alert("Please enter both Name and Wallet Address.");
+  const handleAddFriend = async () => {
+    if (!name || !walletAddress) {
+      alert("Please enter both Name and Wallet Address.");
+      return;
+    }
 
-    const newFriend = { name, walletAddress };
-    setFriends([newFriend, ...friends]);
-    setNotifications([...notifications, `Friend ${name} added successfully!`]);
-    setName("");
-    setWalletAddress("");
+    const newFriend = { name, address: walletAddress };
+
+    try {
+      const updatedFriends = [...friends, newFriend];
+      await setFriends(updatedFriends); // Update on server
+      setFriendsState(updatedFriends); // Update local state
+      setNotifications([...notifications, `Friend ${name} added successfully!`]);
+      setName("");
+      setWalletAddress("");
+    } catch (error) {
+      console.error("Error adding friend:", error);
+    }
   };
 
   const handleEditFriend = (walletAddress: string) => {
-    const friendToEdit = friends.find(friend => friend.walletAddress === walletAddress);
+    const friendToEdit = friends.find(friend => friend.address === walletAddress);
     if (!friendToEdit) return;
     setEditWalletAddress(walletAddress);
     setName(friendToEdit.name);
-    setWalletAddress(friendToEdit.walletAddress);
+    setWalletAddress(friendToEdit.address);
   };
 
-  const handleUpdateFriend = () => {
+  const handleUpdateFriend = async () => {
     if (!editWalletAddress) return;
 
     const updatedFriends = friends.map(friend =>
-      friend.walletAddress === editWalletAddress ? { ...friend, name, walletAddress } : friend
+      friend.address === editWalletAddress ? { ...friend, name, address: walletAddress } : friend
     );
-    setFriends(updatedFriends);
-    setNotifications([...notifications, `Friend ${name} updated!`]);
-    setEditWalletAddress(null);
-    setName("");
-    setWalletAddress("");
+
+    try {
+      await setFriends(updatedFriends); // Update on server
+      setFriendsState(updatedFriends); // Update local state
+      setNotifications([...notifications, `Friend ${name} updated!`]);
+      setEditWalletAddress(null);
+      setName("");
+      setWalletAddress("");
+    } catch (error) {
+      console.error("Error updating friend:", error);
+    }
   };
 
-  const handleDeleteFriend = (walletAddress: string) => {
-    const deletedFriend = friends.find(friend => friend.walletAddress === walletAddress);
+  const handleDeleteFriend = async (walletAddress: string) => {
+    const deletedFriend = friends.find(friend => friend.address === walletAddress);
     if (!deletedFriend) return;
 
-    setFriends(friends.filter(friend => friend.walletAddress !== walletAddress));
-    setNotifications([...notifications, `Friend ${deletedFriend.name} removed!`]);
+    const updatedFriends = friends.filter(friend => friend.address !== walletAddress);
+
+    try {
+      await setFriends(updatedFriends); // Update on server
+      setFriendsState(updatedFriends); // Update local state
+      setNotifications([...notifications, `Friend ${deletedFriend.name} removed!`]);
+    } catch (error) {
+      console.error("Error deleting friend:", error);
+    }
   };
 
   const handleDeleteNotification = (index: number) => {
@@ -95,32 +121,32 @@ const Friend = () => {
       <input type="text" placeholder="Wallet Address" value={walletAddress} onChange={(e) => setWalletAddress(e.target.value)} className={styles.inputField} />
       {editWalletAddress !== null ? (
         <div>
-            <br/>
-            <button className={styles.actionButtonAddUpdate} onClick={handleUpdateFriend}>Update</button>
+          <br/>
+          <button className={styles.actionButtonAddUpdate} onClick={handleUpdateFriend}>Update</button>
         </div>
       ) : (
         <div>
-            <br/>
-            <button className={styles.actionButtonAddUpdate} onClick={handleAddFriend}>Add</button>
+          <br/>
+          <button className={styles.actionButtonAddUpdate} onClick={handleAddFriend}>Add</button>
         </div>
       )}
       
       <h2>Friends List</h2>
       <div className={styles.friendsList}>
         {friends.map(friend => (
-          <div key={friend.walletAddress} className={styles.friendCard}>
-            <button className={styles.payButton} onClick={() => setPayPopup(friend.walletAddress)}>Pay</button>
+          <div key={friend.address} className={styles.friendCard}>
+            <button className={styles.payButton} onClick={() => setPayPopup(friend.address)}>Pay</button>
             <span className={styles.friendName}>{friend.name}</span>
-            <span className={styles.friendAddress}>{friend.walletAddress}</span>
-            <button className={styles.actionButton} onClick={() => handleEditFriend(friend.walletAddress)}>Edit</button>
-            <button className={styles.actionButton} onClick={() => handleDeleteFriend(friend.walletAddress)}>Delete</button>
+            <span className={styles.friendAddress}>{friend.address}</span>
+            <button className={styles.actionButton} onClick={() => handleEditFriend(friend.address)}>Edit</button>
+            <button className={styles.actionButton} onClick={() => handleDeleteFriend(friend.address)}>Delete</button>
           </div>
         ))}
       </div>
 
       {payPopup !== null && (
         <div className={styles.notificationPopup}>
-          <p>Processing payment for {friends.find(friend => friend.walletAddress === payPopup)?.name}</p>
+          <p>Processing payment for {friends.find(friend => friend.address === payPopup)?.name}</p>
           <button className={styles.actionButton} onClick={() => setPayPopup(null)}>Close</button>
         </div>
       )}
