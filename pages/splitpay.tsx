@@ -89,25 +89,9 @@ const SplitPay = () => {
     }
   };
  
-
-
-  // const handleAddAddress = () => {
-  //   if (recipient.trim() !== "") {
-  //     setAddresses([...addresses, { id: Date.now(), address: recipient }]);
-  //     setRecipient("");
-  //   }
-  // };
-
   const handleDeleteAddress = (id: number) => {
     setAddresses(addresses.filter((addr) => addr.id !== id));
   };
-
-  // const handleEditAddress = (id: number) => {
-  //   const newAddress = prompt("Edit address:");
-  //   if (newAddress) {
-  //     setAddresses(addresses.map((addr) => (addr.id === id ? { ...addr, address: newAddress } : addr)));
-  //   }
-  // };
 
   const handleAddFriend = (friend: { name: string; address: string }) => {
     if (!addresses.some((addr) => addr.address === friend.address)) {
@@ -178,6 +162,20 @@ const SplitPay = () => {
       <div className={styles.paymentControls}>
         <button onClick={() => handleSendTransaction(recipient)}  className={`${styles.payButton} ${isDeveloperTheme ? styles.greenButton : ""}`}>Pay</button>
 
+         {isDeveloperTheme && (
+        <select
+        className={styles.chainSelect}
+          value={selectedNet}
+          onChange={(e) => {
+            setSelectedNet(e.target.value);
+            setSelectedChain(Object.keys(chains[e.target.value])[0]);
+          }}
+        >
+          <option value="Testnet">Testnet</option>
+          <option value="Local">Localnet</option>
+        </select>
+      )}
+
         <select className={styles.chainSelect} value={selectedChain} onChange={(e) => setSelectedChain(e.target.value)}>
           {Object.keys(chains[selectedNet]).map((chain) => (
             <option key={chain} value={chain}>
@@ -187,7 +185,7 @@ const SplitPay = () => {
         </select>
       </div>
 
-      {/* Added Addresses List */}
+
       {addresses.length > 0 && (
         <div className={styles.addressList}>
           {addresses.map((addr) => (
