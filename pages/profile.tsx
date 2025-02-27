@@ -1,10 +1,13 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styles from "../styles/profile.module.css";
 import { usePrivy } from "@privy-io/react-auth";
+import { ConnectedWallet } from "@privy-io/react-auth";
+import { useRouter } from "next/router";
+
 
 const Profile = () => {
-  const [walletAddress] = useState("0xAbcD1234EfGh5678IjKl90MnOpQrStUvWxYz");
-  const [isWalletVisible, setIsWalletVisible] = useState(true);
+  const [wallets, setWallets] = useState<ConnectedWallet[]>([]);
+  const router = useRouter();
 
   const {
     linkEmail,
@@ -23,6 +26,15 @@ const Profile = () => {
 
   const {user} = usePrivy();
 
+
+  
+    useEffect(() => {
+      if (router.query.wallets) {
+        setWallets(JSON.parse(router.query.wallets as string));
+      }
+    }, [router.query.wallets]);
+    
+
   const numAccounts = user?.linkedAccounts?.length || 0;
   const canRemoveAccount = numAccounts > 1;
 
@@ -34,11 +46,6 @@ const Profile = () => {
   const twitterSubject = user?.twitter?.subject || null;
   const discordSubject = user?.discord?.subject || null;
 
-
-  const toggleWalletVisibility = () => {
-    setIsWalletVisible(!isWalletVisible);
-  };
-
   return (
     <div className={styles.container}>
       <div className={styles.profileCard}>
@@ -46,11 +53,8 @@ const Profile = () => {
         
         <div className={styles.walletSection}>
           <span className={styles.walletText}>
-            {isWalletVisible ? walletAddress : "••••••••••••••••••••••••"}
+          {wallets[0]?.address || "Loading..."}
           </span>
-          <button className={styles.toggleButton} onClick={toggleWalletVisibility}>
-            {isWalletVisible ? "Hide" : "Show"}
-          </button>
         </div>
 
         <div className={styles.buttonContainer}>

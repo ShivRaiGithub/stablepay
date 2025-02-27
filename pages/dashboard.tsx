@@ -89,6 +89,11 @@ const {ready, authenticated, logout} = usePrivy();
             <button onClick={() => router.push("/friend")} className={styles.navButton}>
               Friends
             </button>
+            <button 
+            onClick={() => router.push({ pathname: "/profile", query: { wallets: JSON.stringify(wallets) } })}
+            className={styles.navButton}>
+              Profile
+            </button>
             <button
               onClick={() => router.push({ pathname: "/solopay", query: { wallets: JSON.stringify(wallets) } })}
               className={styles.navButton}

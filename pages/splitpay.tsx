@@ -5,6 +5,9 @@ const FaArrowLeft = require("react-icons/fa").FaArrowLeft;
 import { chains } from "../data/constants"; // Import the chains data
 import { useDeveloperTheme } from "../context/DeveloperThemeContext";
 
+import { ConnectedWallet } from "@privy-io/react-auth";
+
+
 const SplitPay = () => {
   const router = useRouter();
   const { isDeveloperTheme } = useDeveloperTheme();
@@ -20,11 +23,21 @@ const SplitPay = () => {
   const [selectedNet, setSelectedNet] = useState(isDeveloperTheme ? "Testnet" : "Mainnet");
   const [selectedChain, setSelectedChain] = useState("");
   const [includeMe, setIncludeMe] = useState(1); // 1 for Include Me, 0 for Exclude Me
+ 
+  const [wallets, setWallets] = useState<ConnectedWallet[]>([]);
 
 
   useEffect(() => {
     setSelectedChain(Object.keys(chains[selectedNet])[0] || "Select Chain"); // Set first chain
   }, [selectedNet]);
+
+
+    useEffect(() => {
+      if (router.query.wallets) {
+        setWallets(JSON.parse(router.query.wallets as string));
+      }
+    }, [router.query.wallets]);
+  
 
   const handleAddAddress = () => {
     if (recipient.trim() !== "") {
