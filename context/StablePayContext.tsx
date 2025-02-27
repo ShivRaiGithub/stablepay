@@ -1,6 +1,6 @@
 import { createContext, useContext, useState, ReactNode, useEffect } from "react";
 import { ConnectedWallet } from "@privy-io/react-auth";
-import { friends as initialFriends, notifications as initialNotifications } from "../data/constants";
+import { notifications as initialNotifications } from "../data/constants";
 
 type StablePayContextType = {
   isDeveloperTheme: boolean;
@@ -25,16 +25,23 @@ interface StablePayProviderProps {
 export const StablePayProvider = ({ children }: StablePayProviderProps) => {
   const [isDeveloperTheme, setIsDeveloperTheme] = useState(false);
   const [wallets, setWallets] = useState<ConnectedWallet[]>([]);
-  const [walletAddress, setWalletAddress] = useState("0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266");
+  const [walletAddress, setWalletAddress] = useState("");
   const [friends, setFriendsState] = useState();
   const [notifications, setNotificationsState] = useState(initialNotifications);
 
   useEffect(() => {
     if (walletAddress) {
+      exist(walletAddress);
       getFriends();
       getNotifications();
     }
   }, [walletAddress]);
+
+  useEffect(() => {
+    if (wallets) {
+      setWalletAddress(wallets[0]?.address || "");
+    }
+  }, [wallets]);
 
   const toggleTheme = () => {
     setIsDeveloperTheme((prev) => !prev);
@@ -42,12 +49,54 @@ export const StablePayProvider = ({ children }: StablePayProviderProps) => {
 
   const getUserWallets = () => wallets;
 
-  const setUserWallets = (wallets: ConnectedWallet[]) => setWallets(wallets);
+  
+  const setUserWallets = (walletss: ConnectedWallet[]) => {setWallets(walletss);}
+
+  const exist = async (walletAddress: string) => {
+    try {
+      const response = await fetch(
+        `https://stablepay-backend.onrender.com/api/users/${walletAddress}`
+      );
+  
+      if (response.ok) {
+        console.log("User already exists.");
+        return;
+      }
+  
+      if (response.status === 404) {
+        const createResponse = await fetch(
+          "https://stablepay-backend.onrender.com/api/users/",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              address: walletAddress,
+              friends: [],
+              notification: [],
+            }),
+          }
+        );
+  
+        if (!createResponse.ok) {
+          throw new Error("Failed to create user.");
+        }
+  
+        console.log("User created successfully.");
+      } else {
+        throw new Error("Error checking user existence.");
+      }
+    } catch (error) {
+      console.error("Error in exist function:", error);
+    }
+  };
 
   const getFriends = async () => {
     if (!walletAddress) return [];
   
     try {
+      console.log("Wallet address is", walletAddress);
       const response = await fetch(`https://stablepay-backend.onrender.com/api/users/${walletAddress}`);
       if (!response.ok) throw new Error("Failed to fetch friends");
   

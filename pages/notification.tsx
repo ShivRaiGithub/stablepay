@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import styles from "../styles/notification.module.css";
 import { useRouter } from "next/router";
-import { FaArrowLeft } from "react-icons/fa";
+const { FaArrowLeft } = require("react-icons/fa");
 import { useStablePay } from "../context/StablePayContext";
 
 const NotificationPage = () => {
@@ -18,7 +18,7 @@ const NotificationPage = () => {
 
   const deleteNotification = async (index: number) => {
     const updatedNotifications = notifications.filter((_, i) => i !== index);
-    await setNotifications(updatedNotifications); // Update backend and local state
+    await setNotifications(updatedNotifications);
   };
 
   return (
@@ -32,7 +32,7 @@ const NotificationPage = () => {
       <div className={styles.notificationsList}>
       {notifications.length > 0 ? (
   notifications.map((notif, index) => (
-    <div key={notif._id || index} className={styles.notificationItem}>
+    <div key={index} className={styles.notificationItem}>
       {notif.title}  {/* Access the title property */}
       <button
         className={styles.deleteButton}

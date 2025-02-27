@@ -2,6 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
+body{
+  background-color: #121212;
+}
+
 @layer base {
   /* normal */
   @font-face {

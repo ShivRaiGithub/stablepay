@@ -19,7 +19,7 @@ const SplitPay = () => {
   const [friends, setFriends] = useState<{ name: string; address: string }[]>([]);
   const [selectedNet, setSelectedNet] = useState(isDeveloperTheme ? "Testnet" : "Mainnet");
   const [selectedChain, setSelectedChain] = useState("");
-  const [includeMe, setIncludeMe] = useState(1); // 1 for Include Me, 0 for Exclude Me
+  const [includeMe, setIncludeMe] = useState(1);
 
   const [wallets, setWallets] = useState<ConnectedWallet[]>([]);
 
@@ -28,9 +28,17 @@ const SplitPay = () => {
   }, [selectedNet]);
 
   useEffect(() => {
-    setWallets(getUserWallets());
-    setFriends(getFriends());
-  }, [getUserWallets, getFriends]);
+    const fetchData = async () => {
+      const wallets = await getUserWallets();
+      const friends = await getFriends();
+      
+      setWallets(wallets);
+      setFriends(friends);
+    };
+  
+    fetchData().catch(console.error);
+  }, []);
+  
 
 
 
@@ -93,6 +101,7 @@ const SplitPay = () => {
     }
   };
 
+  console.log("Friends List", friends);
   return (
     <div className={`${styles.container} ${isDeveloperTheme ? styles.darkTheme : ""}`}>
       {/* Top Bar */}

@@ -15,7 +15,6 @@ const Friend = () => {
   const [showNotifications] = useState(false);
   const [friends, setFriendsState] = useState<{ name: string; address: string }[]>([]);
 
-  // Fetch Friends on Component Mount
   useEffect(() => {
     const fetchFriends = async () => {
       const newFriends = await getFriends(); // Fetch friends

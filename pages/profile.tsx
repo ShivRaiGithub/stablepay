@@ -2,8 +2,13 @@ import React, { useState, useEffect } from "react";
 import styles from "../styles/profile.module.css";
 import { usePrivy, ConnectedWallet } from "@privy-io/react-auth";
 import { useStablePay } from "../context/StablePayContext";
+const { FaArrowLeft } = require("react-icons/fa");
+import { useRouter } from "next/router";
+
 
 const Profile = () => {
+    const router = useRouter();
+  
   const [wallets, setWallets] = useState<ConnectedWallet[]>([]);
   const { getUserWallets } = useStablePay();
   const { 
@@ -31,7 +36,11 @@ const Profile = () => {
     <div className={styles.container}>
       <div className={styles.profileCard}>
         <h2 className={styles.title}>Profile</h2>
-        
+        <div className={styles.topBar}>
+        <button className={styles.backButton} onClick={() => router.back()}>
+          <FaArrowLeft />
+        </button>
+      </div>
         <div className={styles.walletSection}>
           <span className={styles.walletText}>
           {wallets[0]?.address || "Loading..."}
