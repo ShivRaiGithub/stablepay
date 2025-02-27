@@ -1,39 +1,20 @@
 import React, { useState, useEffect } from "react";
 import styles from "../styles/profile.module.css";
-import { usePrivy } from "@privy-io/react-auth";
-import { ConnectedWallet } from "@privy-io/react-auth";
-import { useRouter } from "next/router";
-
+import { usePrivy, ConnectedWallet } from "@privy-io/react-auth";
+import { useStablePay } from "../context/StablePayContext";
 
 const Profile = () => {
   const [wallets, setWallets] = useState<ConnectedWallet[]>([]);
-  const router = useRouter();
-
-  const {
-    linkEmail,
-    linkWallet,
-    unlinkEmail,
-    linkPhone,
-    unlinkPhone,
-    unlinkWallet,
-    linkGoogle,
-    unlinkGoogle,
-    linkTwitter,
-    unlinkTwitter,
-    linkDiscord,
-    unlinkDiscord,
+  const { getUserWallets } = useStablePay();
+  const { 
+    linkEmail, linkWallet, unlinkEmail, linkPhone, unlinkPhone, unlinkWallet, 
+    linkGoogle, unlinkGoogle, linkTwitter, unlinkTwitter, linkDiscord, unlinkDiscord, 
+    user 
   } = usePrivy();
 
-  const {user} = usePrivy();
-
-
-  
-    useEffect(() => {
-      if (router.query.wallets) {
-        setWallets(JSON.parse(router.query.wallets as string));
-      }
-    }, [router.query.wallets]);
-    
+  useEffect(() => {
+    setWallets(getUserWallets());
+  }, [getUserWallets]);
 
   const numAccounts = user?.linkedAccounts?.length || 0;
   const canRemoveAccount = numAccounts > 1;

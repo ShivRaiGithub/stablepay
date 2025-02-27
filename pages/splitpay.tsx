@@ -1,43 +1,33 @@
 import React, { useState, useEffect } from "react";
 import styles from "../styles/splitpay.module.css";
 import { useRouter } from "next/router";
-const FaArrowLeft = require("react-icons/fa").FaArrowLeft;
 import { chains } from "../data/constants"; // Import the chains data
-import { useDeveloperTheme } from "../context/DeveloperThemeContext";
-
+import { useStablePay } from "../context/StablePayContext";
 import { ConnectedWallet } from "@privy-io/react-auth";
-
 
 const SplitPay = () => {
   const router = useRouter();
-  const { isDeveloperTheme } = useDeveloperTheme();
+  const { isDeveloperTheme, getUserWallets, getFriends } = useStablePay();
   const [recipient, setRecipient] = useState("");
   const [amount, setAmount] = useState("");
   const [contributor, setContributor] = useState(""); // Separate contributor input state
   const [addresses, setAddresses] = useState<{ id: number; address: string }[]>([]);
-  const [friends, setFriends] = useState([
-    { name: "John Doe", address: "0xAbC123456789Ef123456789AbCdEf1234567890" },
-    { name: "Jane Smith", address: "0xDef456789AbCdEf123456789AbCdEf123456789C1" },
-    { name: "Alice Johnson", address: "0x123AbCdEf456789dEf123456789AbCdEf1234567" },
-  ]);
+  const [friends, setFriends] = useState<{ name: string; address: string }[]>([]);
   const [selectedNet, setSelectedNet] = useState(isDeveloperTheme ? "Testnet" : "Mainnet");
   const [selectedChain, setSelectedChain] = useState("");
   const [includeMe, setIncludeMe] = useState(1); // 1 for Include Me, 0 for Exclude Me
- 
+
   const [wallets, setWallets] = useState<ConnectedWallet[]>([]);
 
-
   useEffect(() => {
-    setSelectedChain(Object.keys(chains[selectedNet])[0] || "Select Chain"); // Set first chain
+    setSelectedChain(Object.keys(chains[selectedNet])[0] || "Select Chain");
   }, [selectedNet]);
 
+  useEffect(() => {
+    setWallets(getUserWallets());
+    setFriends(getFriends());
+  }, [getUserWallets, getFriends]);
 
-    useEffect(() => {
-      if (router.query.wallets) {
-        setWallets(JSON.parse(router.query.wallets as string));
-      }
-    }, [router.query.wallets]);
-  
 
   const handleAddAddress = () => {
     if (recipient.trim() !== "") {

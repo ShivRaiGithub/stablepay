@@ -47,3 +47,16 @@ export const chains = {
         Localhost: { chain: localhost, usdcAddress: "0x5FbDB2315678afecb367f032d93F642f64180aa3" },
     },
 };
+
+
+export const friends=[
+  { name: "John Doe", address: "0xAbC123456789Ef123456789AbCdEf1234567890" },
+  { name: "Jane Smith", address: "0xDef456789AbCdEf123456789AbCdEf123456789C1" },
+  { name: "Alice Johnson", address: "0x123AbCdEf456789dEf123456789AbCdEf1234567" },
+]
+
+export const notifications =[
+  "Payment received from John",
+  "New transaction alert",
+  "Reminder: Split Payment pending"
+]

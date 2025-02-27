@@ -3,7 +3,7 @@ import type { AppProps } from "next/app";
 import Head from "next/head";
 import "../styles/globals.css";
 import { PrivyProvider } from "@privy-io/react-auth";
-import { DeveloperThemeProvider } from "../context/DeveloperThemeContext";
+import { StablePayProvider } from "../context/StablePayContext";
 
 
 
@@ -13,7 +13,7 @@ import { anvil, localhost, mainnet, arbitrum, base, polygon, optimism, sepolia, 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
     <>
-        <DeveloperThemeProvider>
+        <StablePayProvider>
 
       <Head>
         <link
@@ -63,7 +63,7 @@ function MyApp({ Component, pageProps }: AppProps) {
         <Component {...pageProps} />
       </PrivyProvider>
 
-    </DeveloperThemeProvider>
+    </StablePayProvider>
     </>
   );
 }

@@ -3,15 +3,14 @@ import { useRouter } from "next/router";
 import styles from "../styles/solopay.module.css";
 const { FaArrowLeft } = require("react-icons/fa");
 
-import { useDeveloperTheme } from "../context/DeveloperThemeContext";
-
+import { useStablePay } from "../context/StablePayContext";
 import { createWalletClient, custom, encodeFunctionData } from "viem";
 import { USDC_APPROVE_ABI, chains } from "../data/constants";
 import { ConnectedWallet } from "@privy-io/react-auth";
 
 const SoloPay = () => {
   const router = useRouter();
-  const { isDeveloperTheme } = useDeveloperTheme(); // Get theme state from context
+  const { isDeveloperTheme, getUserWallets } = useStablePay(); // Get theme state and wallets from context
   const [address, setAddress] = useState("");
   const [amount, setAmount] = useState(0);
   const [selectedNet, setSelectedNet] = useState(isDeveloperTheme ? "Testnet" : "Mainnet"); // Default network based on theme
@@ -20,17 +19,15 @@ const SoloPay = () => {
   const [wallets, setWallets] = useState<ConnectedWallet[]>([]);
 
   useEffect(() => {
-    if (router.query.wallets) {
-      setWallets(JSON.parse(router.query.wallets as string));
-    }
-  }, [router.query.wallets]);
+    setWallets(getUserWallets()); // Fetch wallets from context
+  }, [getUserWallets]);
 
-  // Update network and chain when the theme changes
   useEffect(() => {
     const network = isDeveloperTheme ? "Testnet" : "Mainnet";
     setSelectedNet(network);
     setSelectedChain(Object.keys(chains[network])[0]); // Reset chain
-  }, [isDeveloperTheme]);
+  }, [isDeveloperTheme]); 
+
 
   const selectedNetwork = isDeveloperTheme ? selectedNet : "Mainnet";
 

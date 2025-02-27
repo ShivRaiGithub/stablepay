@@ -1,57 +1,64 @@
-import React, { useState } from "react";
-import { friends as initialFriends } from "../data/friend";
+import React, { useState, useEffect } from "react";
 import styles from "../styles/friend.module.css";
 import { useRouter } from "next/router";
 const FaArrowLeft = require("react-icons/fa").FaArrowLeft;
-const FaBell = require("react-icons/fa").FaBell;
+import { useStablePay } from "../context/StablePayContext";
 
 const Friend = () => {
-  const router = useRouter();
-  const [friends, setFriends] = useState(initialFriends);
+  const router = useRouter();  
+  const { getFriends } = useStablePay();
   const [name, setName] = useState("");
   const [walletAddress, setWalletAddress] = useState("");
-  const [editId, setEditId] = useState<number | null>(null);
-  const [payPopup, setPayPopup] = useState<number | null>(null);
-
+  const [editWalletAddress, setEditWalletAddress] = useState<string | null>(null);
+  const [payPopup, setPayPopup] = useState<string | null>(null);
   const [notifications, setNotifications] = useState<string[]>([]);
   const [showNotifications] = useState(false);
+  const [friends, setFriends] = useState<{ name: string; walletAddress: string }[]>([]);
+
+  useEffect(() => {
+    setFriends(getFriends().map(friend => ({
+      name: friend.name,
+      walletAddress: friend.address
+    })));
+    
+  }, [getFriends]);
 
   const handleAddFriend = () => {
     if (!name || !walletAddress) return alert("Please enter both Name and Wallet Address.");
 
-    const newFriend = { id: friends.length + 1, name, walletAddress };
+    const newFriend = { name, walletAddress };
     setFriends([newFriend, ...friends]);
     setNotifications([...notifications, `Friend ${name} added successfully!`]);
     setName("");
     setWalletAddress("");
   };
 
-  const handleEditFriend = (id: number) => {
-    const friendToEdit = friends.find(friend => friend.id === id);
+  const handleEditFriend = (walletAddress: string) => {
+    const friendToEdit = friends.find(friend => friend.walletAddress === walletAddress);
     if (!friendToEdit) return;
-    setEditId(id);
+    setEditWalletAddress(walletAddress);
     setName(friendToEdit.name);
     setWalletAddress(friendToEdit.walletAddress);
   };
 
   const handleUpdateFriend = () => {
-    if (editId === null) return;
+    if (!editWalletAddress) return;
 
     const updatedFriends = friends.map(friend =>
-      friend.id === editId ? { ...friend, name, walletAddress } : friend
+      friend.walletAddress === editWalletAddress ? { ...friend, name, walletAddress } : friend
     );
     setFriends(updatedFriends);
     setNotifications([...notifications, `Friend ${name} updated!`]);
-    setEditId(null);
+    setEditWalletAddress(null);
     setName("");
     setWalletAddress("");
   };
 
-  const handleDeleteFriend = (id: number) => {
-    const deletedFriend = friends.find(friend => friend.id === id);
+  const handleDeleteFriend = (walletAddress: string) => {
+    const deletedFriend = friends.find(friend => friend.walletAddress === walletAddress);
     if (!deletedFriend) return;
 
-    setFriends(friends.filter(friend => friend.id !== id));
+    setFriends(friends.filter(friend => friend.walletAddress !== walletAddress));
     setNotifications([...notifications, `Friend ${deletedFriend.name} removed!`]);
   };
 
@@ -83,15 +90,14 @@ const Friend = () => {
         </div>
       )}
       
-      <h2>{editId !== null ? "Edit Friend" : "Add Friend"}</h2>
+      <h2>{editWalletAddress !== null ? "Edit Friend" : "Add Friend"}</h2>
       <input type="text" placeholder="Name" value={name} onChange={(e) => setName(e.target.value)} className={styles.inputField} />
       <input type="text" placeholder="Wallet Address" value={walletAddress} onChange={(e) => setWalletAddress(e.target.value)} className={styles.inputField} />
-      {editId !== null ? (
+      {editWalletAddress !== null ? (
         <div>
             <br/>
             <button className={styles.actionButtonAddUpdate} onClick={handleUpdateFriend}>Update</button>
         </div>
-        // <button className={styles.actionButton} onClick={handleUpdateFriend}>Update</button>
       ) : (
         <div>
             <br/>
@@ -102,19 +108,19 @@ const Friend = () => {
       <h2>Friends List</h2>
       <div className={styles.friendsList}>
         {friends.map(friend => (
-          <div key={friend.id} className={styles.friendCard}>
-            <button className={styles.payButton} onClick={() => setPayPopup(friend.id)}>Pay</button>
+          <div key={friend.walletAddress} className={styles.friendCard}>
+            <button className={styles.payButton} onClick={() => setPayPopup(friend.walletAddress)}>Pay</button>
             <span className={styles.friendName}>{friend.name}</span>
             <span className={styles.friendAddress}>{friend.walletAddress}</span>
-            <button className={styles.actionButton} onClick={() => handleEditFriend(friend.id)}>Edit</button>
-            <button className={styles.actionButton} onClick={() => handleDeleteFriend(friend.id)}>Delete</button>
+            <button className={styles.actionButton} onClick={() => handleEditFriend(friend.walletAddress)}>Edit</button>
+            <button className={styles.actionButton} onClick={() => handleDeleteFriend(friend.walletAddress)}>Delete</button>
           </div>
         ))}
       </div>
 
       {payPopup !== null && (
         <div className={styles.notificationPopup}>
-          <p>Processing payment for {friends.find(friend => friend.id === payPopup)?.name}</p>
+          <p>Processing payment for {friends.find(friend => friend.walletAddress === payPopup)?.name}</p>
           <button className={styles.actionButton} onClick={() => setPayPopup(null)}>Close</button>
         </div>
       )}
