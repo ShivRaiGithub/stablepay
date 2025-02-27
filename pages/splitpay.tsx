@@ -1,9 +1,13 @@
 import React, { useState, useEffect } from "react";
 import styles from "../styles/splitpay.module.css";
 import { useRouter } from "next/router";
-import { chains } from "../data/constants"; // Import the chains data
 import { useStablePay } from "../context/StablePayContext";
 import { ConnectedWallet } from "@privy-io/react-auth";
+import { createWalletClient, custom, encodeFunctionData } from "viem";
+import { USDC_APPROVE_ABI, chains } from "../data/constants";
+
+const FaArrowLeft = require("react-icons/fa").FaArrowLeft;
+
 
 const SplitPay = () => {
   const router = useRouter();
@@ -28,6 +32,35 @@ const SplitPay = () => {
     setFriends(getFriends());
   }, [getUserWallets, getFriends]);
 
+
+
+    const handleSendTransaction = async (walletAddress: string) => {
+      const wallet = wallets[0];
+      if (!wallet || !selectedChain) return;
+  
+      const chainData = chains[selectedNetwork][selectedChain];
+      await wallet.switchChain(chainData.chain.id);
+  
+      const provider = await wallet.getEthereumProvider();
+      const walletClient = createWalletClient({
+        chain: chainData.chain,
+        transport: custom(provider),
+      });
+  
+      await walletClient
+        .sendTransaction({
+          account: wallet.address as `0x${string}`,
+          to: chainData.usdcAddress,
+          chain: chainData.chain,
+          data: encodeFunctionData({
+            abi: USDC_APPROVE_ABI,
+            functionName: "transfer",
+            args: [walletAddress as `0x${string}`, BigInt(amount * 1000000)],
+          }),
+        })
+        .then(console.log)
+        .catch(console.error);
+    };
 
   const handleAddAddress = () => {
     if (recipient.trim() !== "") {
@@ -112,11 +145,9 @@ const SplitPay = () => {
         Add Contributor
       </button>
 
-      {/* Pay & Network Selection */}
       <div className={styles.paymentControls}>
-        <button className={`${styles.payButton} ${isDeveloperTheme ? styles.greenButton : ""}`}>Pay</button>
+        <button onClick={() => handleSendTransaction(recipient)}  className={`${styles.payButton} ${isDeveloperTheme ? styles.greenButton : ""}`}>Pay</button>
 
-        {/* Chain Selection Dropdown */}
         <select className={styles.chainSelect} value={selectedChain} onChange={(e) => setSelectedChain(e.target.value)}>
           {Object.keys(chains[selectedNet]).map((chain) => (
             <option key={chain} value={chain}>
