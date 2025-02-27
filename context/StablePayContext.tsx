@@ -14,6 +14,7 @@ type StablePayContextType = {
   notifications: string[];
   getNotifications: () => Promise<void>;
   setNotifications: (notifications: string[]) => Promise<void>;
+  sendNotifications: (address:string, notification: string) => Promise<void>;
 };
 
 const StablePayContext = createContext<StablePayContextType | null>(null);
@@ -171,6 +172,38 @@ export const StablePayProvider = ({ children }: StablePayProviderProps) => {
     }
   };
 
+  const sendNotifications = async (address: string, notification: string) => {
+    if (!address) return;
+    exist(address);
+  
+    try {
+      // Fetch the current notification list
+      const notificationList = await getNotifications();
+  
+      // Append the new notification at the top
+      const updatedNotifications = [notification, ...notificationList];
+  
+      const response = await fetch(
+        `https://stablepay-backend.onrender.com/api/users/${address}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ notification: updatedNotifications }),
+        }
+      );
+  
+      if (!response.ok) throw new Error("Failed to update notifications");
+  
+      // Update local state with the new list
+      setNotificationsState(updatedNotifications);
+    } catch (error) {
+      console.error("Error updating notifications:", error);
+    }
+  };
+  
+
   return (
     <StablePayContext.Provider
       value={{
@@ -185,6 +218,7 @@ export const StablePayProvider = ({ children }: StablePayProviderProps) => {
         notifications,
         getNotifications,
         setNotifications,
+        sendNotifications,
       }}
     >
       {children}

@@ -10,9 +10,7 @@ const Friend = () => {
   const [name, setName] = useState("");
   const [walletAddress, setWalletAddress] = useState("");
   const [editWalletAddress, setEditWalletAddress] = useState<string | null>(null);
-  const [payPopup, setPayPopup] = useState<string | null>(null);
   const [notifications, setNotifications] = useState<string[]>([]);
-  const [showNotifications] = useState(false);
   const [friends, setFriendsState] = useState<{ name: string; address: string }[]>([]);
 
   useEffect(() => {
@@ -87,10 +85,10 @@ const Friend = () => {
     }
   };
 
-  const handleDeleteNotification = (index: number) => {
-    const updatedNotifications = notifications.filter((_, i) => i !== index);
-    setNotifications(updatedNotifications);
-  };
+  // const handleDeleteNotification = (index: number) => {
+  //   const updatedNotifications = notifications.filter((_, i) => i !== index);
+  //   setNotifications(updatedNotifications);
+  // };
 
   return (
     <div className={styles.container}>
@@ -99,7 +97,7 @@ const Friend = () => {
           <FaArrowLeft />
         </button>
       </div>
-
+{/* 
       {showNotifications && (
         <div className={styles.notificationPopup}>
           {notifications.length > 0 ? (
@@ -113,7 +111,7 @@ const Friend = () => {
             <p>No new notifications</p>
           )}
         </div>
-      )}
+      )} */}
       
       <h2>{editWalletAddress !== null ? "Edit Friend" : "Add Friend"}</h2>
       <input type="text" placeholder="Name" value={name} onChange={(e) => setName(e.target.value)} className={styles.inputField} />
@@ -134,7 +132,7 @@ const Friend = () => {
       <div className={styles.friendsList}>
         {friends.map(friend => (
           <div key={friend.address} className={styles.friendCard}>
-            <button className={styles.payButton} onClick={() => setPayPopup(friend.address)}>Pay</button>
+            <button className={styles.payButton} onClick={() => router.push(`/solopay?recipient=${friend.address}`)}>Pay</button>
             <span className={styles.friendName}>{friend.name}</span>
             <span className={styles.friendAddress}>{friend.address}</span>
             <button className={styles.actionButton} onClick={() => handleEditFriend(friend.address)}>Edit</button>
@@ -143,12 +141,6 @@ const Friend = () => {
         ))}
       </div>
 
-      {payPopup !== null && (
-        <div className={styles.notificationPopup}>
-          <p>Processing payment for {friends.find(friend => friend.address === payPopup)?.name}</p>
-          <button className={styles.actionButton} onClick={() => setPayPopup(null)}>Close</button>
-        </div>
-      )}
     </div>
   );
 };

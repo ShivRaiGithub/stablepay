@@ -11,7 +11,7 @@ const FaArrowLeft = require("react-icons/fa").FaArrowLeft;
 
 const SplitPay = () => {
   const router = useRouter();
-  const { isDeveloperTheme, getUserWallets, getFriends } = useStablePay();
+  const { isDeveloperTheme, getUserWallets, getFriends, sendNotifications } = useStablePay();
   const [recipient, setRecipient] = useState("");
   const [amount, setAmount] = useState(0);
   const [contributor, setContributor] = useState(""); // Separate contributor input state
@@ -41,52 +41,74 @@ const SplitPay = () => {
   
 
 
-
-    const handleSendTransaction = async (walletAddress: string) => {
-      const wallet = wallets[0];
-      if (!wallet || !selectedChain) return;
+  const handleSendTransaction = async (recipient: string) => {
+    const wallet = wallets[0];
+    if (!wallet || !selectedChain) return;
   
-      const chainData = chains[selectedNetwork][selectedChain];
-      await wallet.switchChain(chainData.chain.id);
+    const chainData = chains[selectedNet][selectedChain];
+    await wallet.switchChain(chainData.chain.id);
   
-      const provider = await wallet.getEthereumProvider();
-      const walletClient = createWalletClient({
+    const provider = await wallet.getEthereumProvider();
+    const walletClient = createWalletClient({
+      chain: chainData.chain,
+      transport: custom(provider),
+    });
+  
+    try {
+      await walletClient.sendTransaction({
+        account: wallet.address as `0x${string}`,
+        to: chainData.usdcAddress,
         chain: chainData.chain,
-        transport: custom(provider),
+        data: encodeFunctionData({
+          abi: USDC_APPROVE_ABI,
+          functionName: "transfer",
+          args: [recipient as `0x${string}`, BigInt(amount * 1000000)],
+        }),
       });
   
-      await walletClient
-        .sendTransaction({
-          account: wallet.address as `0x${string}`,
-          to: chainData.usdcAddress,
-          chain: chainData.chain,
-          data: encodeFunctionData({
-            abi: USDC_APPROVE_ABI,
-            functionName: "transfer",
-            args: [walletAddress as `0x${string}`, BigInt(amount * 1000000)],
-          }),
-        })
-        .then(console.log)
-        .catch(console.error);
-    };
+      console.log("Transaction sent successfully!");
+  
+      // Calculate the split amount
+      const contributors = addresses.map((addr) => addr.address);
+      const totalContributors = includeMe ? contributors.length + 1 : contributors.length;
 
-  const handleAddAddress = () => {
-    if (recipient.trim() !== "") {
-      setAddresses([...addresses, { id: Date.now(), address: recipient }]);
-      setRecipient("");
+      if (totalContributors <= 0) return;
+  
+      const splitAmount = (amount / totalContributors).toFixed(2);
+      const timestamp: string = new Date().toLocaleString();
+  
+      // Send notifications to contributors (excluding the sender)
+      contributors.forEach((contributor) => {
+        if (contributor !== wallet.address) {
+          sendNotifications(contributor,   `You have to pay ${splitAmount} USDC to ${wallet.address} for split pay on ${selectedChain} at ${timestamp}`);
+        }
+      });
+  
+    } catch (error) {
+      console.error("Error sending transaction:", error);
     }
   };
+
+  
+
+
+  // const handleAddAddress = () => {
+  //   if (recipient.trim() !== "") {
+  //     setAddresses([...addresses, { id: Date.now(), address: recipient }]);
+  //     setRecipient("");
+  //   }
+  // };
 
   const handleDeleteAddress = (id: number) => {
     setAddresses(addresses.filter((addr) => addr.id !== id));
   };
 
-  const handleEditAddress = (id: number) => {
-    const newAddress = prompt("Edit address:");
-    if (newAddress) {
-      setAddresses(addresses.map((addr) => (addr.id === id ? { ...addr, address: newAddress } : addr)));
-    }
-  };
+  // const handleEditAddress = (id: number) => {
+  //   const newAddress = prompt("Edit address:");
+  //   if (newAddress) {
+  //     setAddresses(addresses.map((addr) => (addr.id === id ? { ...addr, address: newAddress } : addr)));
+  //   }
+  // };
 
   const handleAddFriend = (friend: { name: string; address: string }) => {
     if (!addresses.some((addr) => addr.address === friend.address)) {

@@ -11,12 +11,14 @@ import { ConnectedWallet } from "@privy-io/react-auth";
 const SoloPay = () => {
   const router = useRouter();
   const { isDeveloperTheme, getUserWallets } = useStablePay(); // Get theme state and wallets from context
-  const [address, setAddress] = useState("");
+  const { recipient } = router.query; 
+  const [address, setAddress] = useState(recipient);
   const [amount, setAmount] = useState(0);
   const [selectedNet, setSelectedNet] = useState(isDeveloperTheme ? "Testnet" : "Mainnet"); // Default network based on theme
   const [selectedChain, setSelectedChain] = useState(Object.keys(chains[selectedNet])[0]); // First chain of the network
   const [showDropdown, setShowDropdown] = useState(false);
   const [wallets, setWallets] = useState<ConnectedWallet[]>([]);
+
 
   useEffect(() => {
     setWallets(getUserWallets()); // Fetch wallets from context
@@ -25,6 +27,7 @@ const SoloPay = () => {
   useEffect(() => {
     const network = isDeveloperTheme ? "Testnet" : "Mainnet";
     setSelectedNet(network);
+    
     setSelectedChain(Object.keys(chains[network])[0]); // Reset chain
   }, [isDeveloperTheme]); 
 
