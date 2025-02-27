@@ -88,7 +88,7 @@ const SplitPay = () => {
       console.error("Error sending transaction:", error);
     }
   };
- 
+
   const handleDeleteAddress = (id: number) => {
     setAddresses(addresses.filter((addr) => addr.id !== id));
   };

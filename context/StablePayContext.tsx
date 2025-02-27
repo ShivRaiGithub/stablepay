@@ -1,6 +1,5 @@
 import { createContext, useContext, useState, ReactNode, useEffect } from "react";
 import { ConnectedWallet } from "@privy-io/react-auth";
-import { notifications as initialNotifications } from "../data/constants";
 
 type StablePayContextType = {
   isDeveloperTheme: boolean;
@@ -28,7 +27,7 @@ export const StablePayProvider = ({ children }: StablePayProviderProps) => {
   const [wallets, setWallets] = useState<ConnectedWallet[]>([]);
   const [walletAddress, setWalletAddress] = useState("");
   const [friends, setFriendsState] = useState();
-  const [notifications, setNotificationsState] = useState(initialNotifications);
+  const [notifications, setNotificationsState] = useState<string[]>([]);
 
   useEffect(() => {
     if (walletAddress) {
@@ -175,6 +174,7 @@ export const StablePayProvider = ({ children }: StablePayProviderProps) => {
 
   const sendNotifications = async (address: string, notification: string) => {
     if (!address) return;
+    console.log("in sendNotifications");
     
     try {
       exist(address);
@@ -184,6 +184,7 @@ export const StablePayProvider = ({ children }: StablePayProviderProps) => {
       );
       
       if (!userResponse.ok) throw new Error("Failed to fetch user data");
+    console.log("got data");
       
       const userData = await userResponse.json();
       
@@ -194,6 +195,8 @@ export const StablePayProvider = ({ children }: StablePayProviderProps) => {
       
       // Create a notification object that matches your schema
       const newNotification = { title: notification };
+    console.log("titled");
+
       
       // Append the new notification at the top
       const updatedNotifications = [newNotification, ...currentNotifications];
