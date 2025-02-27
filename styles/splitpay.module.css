@@ -130,10 +130,11 @@ input:checked + .slider:before {
 .selectNet {
   background-color: #00cc00;
   color: white;
-  border: 1px solid white;
+  border: none;
   padding: 8px;
   border-radius: 5px;
-  width: 100px;
+  width: 530px;
+  text-align:center;
 }
 
 .backButton,
@@ -175,14 +176,16 @@ input:checked + .slider:before {
 .excludeButton {
   padding: 10px;
   border-radius: 8px;
-  border: none;
+  border: 2px solid transparent;
   cursor: pointer;
   font-weight: bold;
   transition: all 0.3s ease;
   width: 120px;
   text-align: center;
+  font-size: 1rem;
 }
 
+/* Default State */
 .includeButton {
   background: #007bff;
   color: white;
@@ -193,9 +196,23 @@ input:checked + .slider:before {
   color: white;
 }
 
+/* Hover Effect */
 .includeButton:hover,
 .excludeButton:hover {
   opacity: 0.8;
+}
+
+/* Selected Button */
+.selected {
+  background: #0056b3; /* Darker shade */
+  border: 2px solid white; /* White border for visibility */
+  box-shadow: 0px 0px 12px rgba(0, 0, 0, 0.4);
+  transform: scale(1.1);
+}
+
+/* Unselected Button */
+.unselected {
+  opacity: 0.5;
 }
 
 .input {
