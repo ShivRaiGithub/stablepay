@@ -175,34 +175,50 @@ export const StablePayProvider = ({ children }: StablePayProviderProps) => {
   const sendNotifications = async (address: string, notification: string) => {
     if (!address) return;
     exist(address);
-  
+    
     try {
-      // Fetch the current notification list
-      const notificationList = await getNotifications();
-  
+      // First fetch the user data to get current notifications
+      const userResponse = await fetch(
+        `https://stablepay-backend.onrender.com/api/users/${address}`
+      );
+      
+      if (!userResponse.ok) throw new Error("Failed to fetch user data");
+      
+      const userData = await userResponse.json();
+      
+      // Get current notifications from user data
+      const currentNotifications = Array.isArray(userData.notification) 
+        ? userData.notification 
+        : [];
+      
+      // Create a notification object that matches your schema
+      const newNotification = { title: notification };
+      
       // Append the new notification at the top
-      const updatedNotifications = [notification, ...notificationList];
-  
-      const response = await fetch(
+      const updatedNotifications = [newNotification, ...currentNotifications];
+      
+      // Update the user with the new notifications
+      const updateResponse = await fetch(
         `https://stablepay-backend.onrender.com/api/users/${address}`,
         {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ notification: updatedNotifications }),
+          body: JSON.stringify({
+            notification: updatedNotifications
+          }),
         }
       );
-  
-      if (!response.ok) throw new Error("Failed to update notifications");
-  
+      
+      if (!updateResponse.ok) throw new Error("Failed to update notifications");
+      
       // Update local state with the new list
       setNotificationsState(updatedNotifications);
     } catch (error) {
       console.error("Error updating notifications:", error);
     }
   };
-  
 
   return (
     <StablePayContext.Provider
