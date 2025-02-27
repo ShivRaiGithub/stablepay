@@ -88,14 +88,7 @@ const SplitPay = () => {
       console.error("Error sending transaction:", error);
     }
   };
-
-
-  const sendNotifToMe = () => {
-    const timestamp: string = new Date().toLocaleString();
-    sendNotifications(wallets[0]!.address,   `You have to pay USDC for split pay on ${selectedChain} at ${timestamp}`);
-  }
-
-  
+ 
 
 
   // const handleAddAddress = () => {
@@ -153,12 +146,6 @@ const SplitPay = () => {
           onClick={() => setIncludeMe(0)}
         >
           Exclude Me
-        </button>
-        <button
-          className={`${styles.excludeButton} ${includeMe === 0 ? styles.selected : ""}`}
-          onClick={() => sendNotifToMe()}
-        >
-          Send NOTIF
         </button>
       </div>
 
