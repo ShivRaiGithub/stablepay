@@ -13,7 +13,7 @@ const SplitPay = () => {
   const router = useRouter();
   const { isDeveloperTheme, getUserWallets, getFriends } = useStablePay();
   const [recipient, setRecipient] = useState("");
-  const [amount, setAmount] = useState("");
+  const [amount, setAmount] = useState(0);
   const [contributor, setContributor] = useState(""); // Separate contributor input state
   const [addresses, setAddresses] = useState<{ id: number; address: string }[]>([]);
   const [friends, setFriends] = useState<{ name: string; address: string }[]>([]);
