@@ -66,9 +66,6 @@ const Friend = () => {
         <button className={styles.backButton} onClick={() => router.back()}>
           <FaArrowLeft />
         </button>
-        <button className={styles.notificationButton} onClick={() => router.push("/notification")}>
-          <FaBell /> {notifications.length > 0 && <span className={styles.redDot}></span>}
-        </button>
       </div>
 
       {showNotifications && (

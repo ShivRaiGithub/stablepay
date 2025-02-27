@@ -26,6 +26,8 @@
     font-size: 1.8rem;
     font-weight: bold;
     color: #00AAFF;
+    text-align: center;
+    margin-right: 150px;
   }
   
   .notificationsList {
@@ -40,6 +42,7 @@
     background: #222;
     padding: 10px;
     border-radius: 8px;
+    text-align: left;
   }
   
   .emptyMessage {
@@ -63,13 +66,13 @@
   }
   
   .deleteButton {
+    float: right;
     background-color: red;
     color: white;
     border: none;
     padding: 5px 10px;
     cursor: pointer;
     border-radius: 5px;
-    margin-left: 50px;
     transition: background-color 0.2s ease-in-out;
   }
   

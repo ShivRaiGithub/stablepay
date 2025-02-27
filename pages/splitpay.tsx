@@ -8,6 +8,7 @@ const SplitPay = () => {
   const router = useRouter();
   const [recipient, setRecipient] = useState("");
   const [amount, setAmount] = useState("");
+  const [contributor, setContributor] = useState(""); // Separate contributor input state
   const [addresses, setAddresses] = useState<{ id: number; address: string }[]>([]);
   const [friends, setFriends] = useState([
     { name: "John Doe", address: "0xAbC123456789Ef123456789AbCdEf1234567890" },
@@ -62,7 +63,13 @@ const SplitPay = () => {
   const handleAddFriend = (friend: { name: string; address: string }) => {
     if (!addresses.some((addr) => addr.address === friend.address)) {
       setAddresses([...addresses, { id: Date.now(), address: friend.address }]);
-      setFriends(friends.filter((f) => f.address !== friend.address));
+    }
+  };
+
+  const handleAddContributor = () => {
+    if (contributor.trim() !== "") {
+      setAddresses([...addresses, { id: Date.now(), address: contributor }]);
+      setContributor("");
     }
   };
 
@@ -84,7 +91,6 @@ const SplitPay = () => {
         <button className={styles.includeButton}>Include Me</button>
         <button className={styles.excludeButton}>Exclude Me</button>
       </div>
-
       {/* Input Fields */}
       <input
         type="text"
@@ -104,11 +110,11 @@ const SplitPay = () => {
         type="text"
         className={styles.input}
         placeholder="Contributor"
-        value={amount}
-        onChange={(e) => setAmount(e.target.value)}
+        value={contributor} // Fixed: Using separate state
+        onChange={(e) => setContributor(e.target.value)}
       />
-      <button className={`${styles.addButton} ${isDarkTheme ? styles.greenButton : ""}`} onClick={handleAddAddress}>
-        Add
+      <button className={`${styles.addButton} ${isDarkTheme ? styles.greenButton : ""}`} onClick={handleAddContributor}>
+        Add Contributor
       </button>
 
       {/* Pay & Network Selection */}
@@ -139,7 +145,6 @@ const SplitPay = () => {
           {addresses.map((addr) => (
             <div key={addr.id} className={styles.addressItem}>
               <span>{addr.address}</span>
-              <button className={`${styles.editButton} ${isDarkTheme ? styles.greenButton : ""}`} onClick={() => handleEditAddress(addr.id)}>Edit</button>
               <button className={`${styles.deleteButton} ${isDarkTheme ? styles.greenButton : ""}`} onClick={() => handleDeleteAddress(addr.id)}>Delete</button>
             </div>
           ))}

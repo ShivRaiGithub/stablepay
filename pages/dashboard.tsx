@@ -66,11 +66,11 @@ const {ready, authenticated, logout} = usePrivy();
             </div>
           </div>
   
-          <h1 className={styles.welcomeText}>Welcome to StablePay</h1>
+          <h1 className={styles.welcomeText}>StablePay</h1>
+          <h3 className={styles.welcomeTextW}>Welcome</h3>
   
           <div className={styles.walletContainer}>
             <p className={styles.walletAddress}>
-              Wallet:
               <span className={styles.addressText}>
                 {walletAddress}
                 <button className={styles.copyButton} onClick={handleCopyWallet}>
