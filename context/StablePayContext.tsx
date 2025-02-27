@@ -144,6 +144,7 @@ export const StablePayProvider = ({ children }: StablePayProviderProps) => {
 
       const data = await response.json();
       setNotificationsState(data.notification || []);
+      
       console.log(notifications);
     } catch (error) {
       console.error("Error fetching notifications:", error);
@@ -174,9 +175,9 @@ export const StablePayProvider = ({ children }: StablePayProviderProps) => {
 
   const sendNotifications = async (address: string, notification: string) => {
     if (!address) return;
-    exist(address);
     
     try {
+      exist(address);
       // First fetch the user data to get current notifications
       const userResponse = await fetch(
         `https://stablepay-backend.onrender.com/api/users/${address}`

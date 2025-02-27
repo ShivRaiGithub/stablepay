@@ -106,7 +106,6 @@ const SplitPay = () => {
     }
   };
 
-  console.log("Friends List", friends);
   return (
     <div className={`${styles.container} ${isDeveloperTheme ? styles.darkTheme : ""}`}>
       {/* Top Bar */}

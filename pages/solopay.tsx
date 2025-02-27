@@ -12,7 +12,7 @@ const SoloPay = () => {
   const router = useRouter();
   const { isDeveloperTheme, getUserWallets } = useStablePay(); // Get theme state and wallets from context
   const { recipient } = router.query; 
-  const [address, setAddress] = useState(recipient);
+  const [address, setAddress] = useState(recipient || "");
   const [amount, setAmount] = useState(0);
   const [selectedNet, setSelectedNet] = useState(isDeveloperTheme ? "Testnet" : "Mainnet"); // Default network based on theme
   const [selectedChain, setSelectedChain] = useState(Object.keys(chains[selectedNet])[0]); // First chain of the network
@@ -34,9 +34,18 @@ const SoloPay = () => {
 
   const selectedNetwork = isDeveloperTheme ? selectedNet : "Mainnet";
 
-  const handleSendTransaction = async (walletAddress: string) => {
+
+  const isValidEthereumAddress = (addr: string) => /^0x[a-fA-F0-9]{40}$/.test(addr);
+
+  const handleSendTransaction = async () => {
+    if (!isValidEthereumAddress(address)) {
+      return;
+    }
+
     const wallet = wallets[0];
-    if (!wallet || !selectedChain) return;
+    if (!wallet || !selectedChain) {
+      return;
+    }
 
     const chainData = chains[selectedNetwork][selectedChain];
     await wallet.switchChain(chainData.chain.id);
@@ -47,19 +56,22 @@ const SoloPay = () => {
       transport: custom(provider),
     });
 
-    await walletClient
-      .sendTransaction({
+    try {
+      const txHash = await walletClient.sendTransaction({
         account: wallet.address as `0x${string}`,
         to: chainData.usdcAddress,
         chain: chainData.chain,
         data: encodeFunctionData({
           abi: USDC_APPROVE_ABI,
           functionName: "transfer",
-          args: [walletAddress as `0x${string}`, BigInt(amount * 1000000)],
+          args: [address as `0x${string}`, BigInt(Number(amount) * 1000000)],
         }),
-      })
-      .then(console.log)
-      .catch(console.error);
+      });
+
+      console.log("Transaction Sent:", txHash);
+    } catch (error) {
+      console.error("Transaction Error:", error);
+    }
   };
 
   return (
@@ -84,14 +96,14 @@ const SoloPay = () => {
         <input
           placeholder="Enter amount"
           value={amount}
-          onChange={(e) => setAmount(Number(e.target.value))}
+          onChange={(e) => setAmount(e.target.value)}
           className={styles.input}
         />
 
         <div className={styles.buttonContainer}>
           <button
             onClick={async () => {
-              handleSendTransaction(address);
+              handleSendTransaction(recipient);
             }}
             className={`${styles.payButton} ${isDeveloperTheme ? styles.greenButton : ""}`}
           >

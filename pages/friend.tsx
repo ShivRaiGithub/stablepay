@@ -25,7 +25,6 @@ const Friend = () => {
 
   const handleAddFriend = async () => {
     if (!name || !walletAddress) {
-      alert("Please enter both Name and Wallet Address.");
       return;
     }
 

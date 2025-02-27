@@ -10,6 +10,7 @@ const NotificationPage = () => {
 
   useEffect(() => {
     getNotifications(); // Fetch notifications on component mount
+    console.log("Notifications fetched");
   }, []);
 
   const clearNotifications = async () => {

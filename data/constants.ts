@@ -37,7 +37,7 @@ export const chains = {
         Arbitrum: { chain: arbitrum, usdcAddress: "0xaf88d065e77c8cC2239327C5EDb3A432268e5831" },
     },
     Testnet: {
-        Sepolia: { chain: sepolia, usdcAddress: "0xf08A50178dfcDe18524640EA6618a1f965821715" },
+        Sepolia: { chain: sepolia, usdcAddress: "0x1c7D4B196Cb0C7B01d743Fbc6116a902379C7238" },
         BaseSepolia: { chain: baseSepolia, usdcAddress: "0x036CbD53842c5426634e7929541eC2318f3dCF7e" },
         OptimismSepolia: { chain: optimismSepolia, usdcAddress: "0x5fd84259d66Cd46123540766Be93DFE6D43130D7" },
         ArbitrumSepolia: { chain: arbitrumSepolia, usdcAddress: "0x75faf114eafb1BDbe2F0316DF893fd58CE46AA4d" },
@@ -53,10 +53,4 @@ export const friends=[
   { name: "John Doe", address: "0xAbC123456789Ef123456789AbCdEf1234567890" },
   { name: "Jane Smith", address: "0xDef456789AbCdEf123456789AbCdEf123456789C1" },
   { name: "Alice Johnson", address: "0x123AbCdEf456789dEf123456789AbCdEf1234567" },
-]
-
-export const notifications =[
-  "Payment received from John",
-  "New transaction alert",
-  "Reminder: Split Payment pending"
 ]
