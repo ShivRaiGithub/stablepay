@@ -48,9 +48,3 @@ export const chains = {
     },
 };
 
-
-export const friends=[
-  { name: "John Doe", address: "0xAbC123456789Ef123456789AbCdEf1234567890" },
-  { name: "Jane Smith", address: "0xDef456789AbCdEf123456789AbCdEf123456789C1" },
-  { name: "Alice Johnson", address: "0x123AbCdEf456789dEf123456789AbCdEf1234567" },
-]
