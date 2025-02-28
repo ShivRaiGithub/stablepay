@@ -18,7 +18,7 @@ const SplitPay = () => {
   const [contributor, setContributor] = useState(""); // Separate contributor input state
   const [addresses, setAddresses] = useState<{ id: number; address: string }[]>([]);
   const [friends, setFriends] = useState<{ name: string; address: string }[]>([]);
-  const [selectedNet, setSelectedNet] = useState(isDeveloperTheme ? `Testnet ${<FaArrowDown/>}` : "Mainnet");
+  const [selectedNet, setSelectedNet] = useState(isDeveloperTheme ? `Testnet` : "Mainnet");
   const [selectedChain, setSelectedChain] = useState("");
   const [includeMe, setIncludeMe] = useState(1);
 
@@ -177,12 +177,13 @@ const SplitPay = () => {
       )}
 
         <select className={styles.chainSelect} value={selectedChain} onChange={(e) => setSelectedChain(e.target.value)}>
-          {Object.keys(chains[selectedNet]).map((chain) => (
-            <option key={chain} value={chain}>
-              {chain}
-            </option>
-          ))}
-        </select>
+        {chains[selectedNet] ? Object.keys(chains[selectedNet]).map((chain) => (
+          <option key={chain} value={chain}>
+            {chain}
+          </option>
+        )) : <option value="">No chains available</option>}
+      </select>
+
       </div>
 
 

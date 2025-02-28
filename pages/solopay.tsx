@@ -114,14 +114,14 @@ const SoloPay = () => {
           {isDeveloperTheme && (
             <select
               className={styles.selectNet}
-              value={selectedNet}
+              value={selectedNet} 
               onChange={(e) => {
                 setSelectedNet(e.target.value);
                 setSelectedChain(Object.keys(chains[e.target.value])[0]); // Select first chain of new network
               }}
             >
               <option value="Testnet">Testnet</option>
-              <option value="Local">Localnet</option>
+              <option value="Local">Localnet </option>
             </select>
           )}
 
@@ -131,7 +131,7 @@ const SoloPay = () => {
               onClick={() => setShowDropdown(!showDropdown)}
               className={`${styles.chainButton} ${isDeveloperTheme ? styles.greenButton : ""}`}
             >
-              {selectedChain} ▼
+              {selectedChain}
             </button>
             {showDropdown && (
               <div className={styles.dropdownMenu}>
