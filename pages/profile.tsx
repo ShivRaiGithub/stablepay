@@ -5,16 +5,24 @@ import { useStablePay } from "../context/StablePayContext";
 const { FaArrowLeft } = require("react-icons/fa");
 import { useRouter } from "next/router";
 
-
 const Profile = () => {
-    const router = useRouter();
-  
+  const router = useRouter();
   const [wallets, setWallets] = useState<ConnectedWallet[]>([]);
   const { getUserWallets } = useStablePay();
-  const { 
-    linkEmail, linkWallet, unlinkEmail, linkPhone, unlinkPhone, unlinkWallet, 
-    linkGoogle, unlinkGoogle, linkTwitter, unlinkTwitter, linkDiscord, unlinkDiscord, 
-    user 
+  const {
+    linkEmail,
+    linkWallet,
+    unlinkEmail,
+    linkPhone,
+    unlinkPhone,
+    unlinkWallet,
+    linkGoogle,
+    unlinkGoogle,
+    linkTwitter,
+    unlinkTwitter,
+    linkDiscord,
+    unlinkDiscord,
+    user,
   } = usePrivy();
 
   useEffect(() => {
@@ -37,138 +45,134 @@ const Profile = () => {
       <div className={styles.profileCard}>
         <h2 className={styles.title}>Profile</h2>
         <div className={styles.topBar}>
-        <button className={styles.backButton} onClick={() => router.back()}>
-          <FaArrowLeft />
-        </button>
-      </div>
+          <button className={styles.backButton} onClick={() => router.back()}>
+            <FaArrowLeft />
+          </button>
+        </div>
         <div className={styles.walletSection}>
           <span className={styles.walletText}>
-          {wallets[0]?.address || "Loading..."}
+            {wallets[0]?.address || "Loading..."}
           </span>
         </div>
 
         <div className={styles.buttonContainer}>
-        <div className="mt-12 flex gap-4 flex-wrap">
-              {googleSubject ? (
-                <button
-                  onClick={() => {
-                    unlinkGoogle(googleSubject);
-                  }}
-                  className="text-sm border border-violet-600 hover:border-violet-700 py-2 px-4 rounded-md text-violet-600 hover:text-violet-700 disabled:border-gray-500 disabled:text-gray-500 hover:disabled:text-gray-500"
-                  disabled={!canRemoveAccount}
-                >
-                  Unlink Google
-                </button>
-              ) : (
-                <button
-                  onClick={() => {
-                    linkGoogle();
-                  }}
-                  className="text-sm bg-violet-600 hover:bg-violet-700 py-2 px-4 rounded-md text-white"
-                >
-                  Link Google
-                </button>
-              )}
+          <div className="mt-12 flex gap-4 flex-wrap">
+            {googleSubject ? (
+              <button
+                onClick={() => unlinkGoogle(googleSubject)}
+                className="text-sm py-2 px-4 rounded-md text-white"
+                style={{ backgroundColor: "#0af" }}
+                disabled={!canRemoveAccount}
+              >
+                Unlink Google
+              </button>
+            ) : (
+              <button
+                onClick={linkGoogle}
+                className="text-sm py-2 px-4 rounded-md text-white"
+                style={{ backgroundColor: "#0af" }}
+              >
+                Link Google
+              </button>
+            )}
 
-              {twitterSubject ? (
-                <button
-                  onClick={() => {
-                    unlinkTwitter(twitterSubject);
-                  }}
-                  className="text-sm border border-violet-600 hover:border-violet-700 py-2 px-4 rounded-md text-violet-600 hover:text-violet-700 disabled:border-gray-500 disabled:text-gray-500 hover:disabled:text-gray-500"
-                  disabled={!canRemoveAccount}
-                >
-                  Unlink Twitter
-                </button>
-              ) : (
-                <button
-                  className="text-sm bg-violet-600 hover:bg-violet-700 py-2 px-4 rounded-md text-white"
-                  onClick={() => {
-                    linkTwitter();
-                  }}
-                >
-                  Link Twitter
-                </button>
-              )}
+            {twitterSubject ? (
+              <button
+                onClick={() => unlinkTwitter(twitterSubject)}
+                className="text-sm py-2 px-4 rounded-md text-white"
+                style={{ backgroundColor: "#0af" }}
+                disabled={!canRemoveAccount}
+              >
+                Unlink Twitter
+              </button>
+            ) : (
+              <button
+                onClick={linkTwitter}
+                className="text-sm py-2 px-4 rounded-md text-white"
+                style={{ backgroundColor: "#0af" }}
+              >
+                Link Twitter
+              </button>
+            )}
 
-              {discordSubject ? (
-                <button
-                  onClick={() => {
-                    unlinkDiscord(discordSubject);
-                  }}
-                  className="text-sm border border-violet-600 hover:border-violet-700 py-2 px-4 rounded-md text-violet-600 hover:text-violet-700 disabled:border-gray-500 disabled:text-gray-500 hover:disabled:text-gray-500"
-                  disabled={!canRemoveAccount}
-                >
-                  Unlink Discord
-                </button>
-              ) : (
-                <button
-                  className="text-sm bg-violet-600 hover:bg-violet-700 py-2 px-4 rounded-md text-white"
-                  onClick={() => {
-                    linkDiscord();
-                  }}
-                >
-                  Link Discord
-                </button>
-              )}
+            {discordSubject ? (
+              <button
+                onClick={() => unlinkDiscord(discordSubject)}
+                className="text-sm py-2 px-4 rounded-md text-white"
+                style={{ backgroundColor: "#0af" }}
+                disabled={!canRemoveAccount}
+              >
+                Unlink Discord
+              </button>
+            ) : (
+              <button
+                onClick={linkDiscord}
+                className="text-sm py-2 px-4 rounded-md text-white"
+                style={{ backgroundColor: "#0af" }}
+              >
+                Link Discord
+              </button>
+            )}
 
-              {email ? (
-                <button
-                  onClick={() => {
-                    unlinkEmail(email.address);
-                  }}
-                  className="text-sm border border-violet-600 hover:border-violet-700 py-2 px-4 rounded-md text-violet-600 hover:text-violet-700 disabled:border-gray-500 disabled:text-gray-500 hover:disabled:text-gray-500"
-                  disabled={!canRemoveAccount}
-                >
-                  Unlink email
-                </button>
-              ) : (
-                <button
-                  onClick={linkEmail}
-                  className="text-sm bg-violet-600 hover:bg-violet-700 py-2 px-4 rounded-md text-white"
-                >
-                  Connect email
-                </button>
-              )}
-              {wallet ? (
-                <button
-                  onClick={() => {
-                    unlinkWallet(wallet.address);
-                  }}
-                  className="text-sm border border-violet-600 hover:border-violet-700 py-2 px-4 rounded-md text-violet-600 hover:text-violet-700 disabled:border-gray-500 disabled:text-gray-500 hover:disabled:text-gray-500"
-                  disabled={!canRemoveAccount}
-                >
-                  Unlink wallet
-                </button>
-              ) : (
-                <button
-                  onClick={linkWallet}
-                  className="text-sm bg-violet-600 hover:bg-violet-700 py-2 px-4 rounded-md text-white border-none"
-                >
-                  Connect wallet
-                </button>
-              )}
-              {phone ? (
-                <button
-                  onClick={() => {
-                    unlinkPhone(phone.number);
-                  }}
-                  className="text-sm border border-violet-600 hover:border-violet-700 py-2 px-4 rounded-md text-violet-600 hover:text-violet-700 disabled:border-gray-500 disabled:text-gray-500 hover:disabled:text-gray-500"
-                  disabled={!canRemoveAccount}
-                >
-                  Unlink phone
-                </button>
-              ) : (
-                <button
-                  onClick={linkPhone}
-                  className="text-sm bg-violet-600 hover:bg-violet-700 py-2 px-4 rounded-md text-white border-none"
-                >
-                  Connect phone
-                </button>
-              )}
+            {email ? (
+              <button
+                onClick={() => unlinkEmail(email.address)}
+                className="text-sm py-2 px-4 rounded-md text-white"
+                style={{ backgroundColor: "#0af" }}
+                disabled={!canRemoveAccount}
+              >
+                Unlink Email
+              </button>
+            ) : (
+              <button
+                onClick={linkEmail}
+                className="text-sm py-2 px-4 rounded-md text-white"
+                style={{ backgroundColor: "#0af" }}
+              >
+                Connect Email
+              </button>
+            )}
+
+            {wallet ? (
+              <button
+                onClick={() => unlinkWallet(wallet.address)}
+                className="text-sm py-2 px-4 rounded-md text-white"
+                style={{ backgroundColor: "#0af" }}
+                disabled={!canRemoveAccount}
+              >
+                Unlink Wallet
+              </button>
+            ) : (
+              <button
+                onClick={linkWallet}
+                className="text-sm py-2 px-4 rounded-md text-white"
+                style={{ backgroundColor: "#0af" }}
+              >
+                Connect Wallet
+              </button>
+            )}
+
+            {phone ? (
+              <button
+                onClick={() => unlinkPhone(phone.number)}
+                className="text-sm py-2 px-4 rounded-md text-white"
+                style={{ backgroundColor: "#0af" }}
+                disabled={!canRemoveAccount}
+              >
+                Unlink Phone
+              </button>
+            ) : (
+              <button
+                onClick={linkPhone}
+                className="text-sm py-2 px-4 rounded-md text-white"
+                style={{ backgroundColor: "#0af" }}
+              >
+                Connect Phone
+              </button>
+            )}
+          </div>
         </div>
       </div>
-    </div>
     </div>
   );
 };

@@ -7,6 +7,7 @@ import { createWalletClient, custom, encodeFunctionData } from "viem";
 import { USDC_APPROVE_ABI, chains } from "../data/constants";
 
 const FaArrowLeft = require("react-icons/fa").FaArrowLeft;
+const FaArrowDown = require("react-icons/fa").FaArrowDown;
 
 
 const SplitPay = () => {
@@ -17,7 +18,7 @@ const SplitPay = () => {
   const [contributor, setContributor] = useState(""); // Separate contributor input state
   const [addresses, setAddresses] = useState<{ id: number; address: string }[]>([]);
   const [friends, setFriends] = useState<{ name: string; address: string }[]>([]);
-  const [selectedNet, setSelectedNet] = useState(isDeveloperTheme ? "Testnet" : "Mainnet");
+  const [selectedNet, setSelectedNet] = useState(isDeveloperTheme ? `Testnet ${<FaArrowDown/>}` : "Mainnet");
   const [selectedChain, setSelectedChain] = useState("");
   const [includeMe, setIncludeMe] = useState(1);
 
