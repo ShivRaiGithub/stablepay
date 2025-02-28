@@ -10,6 +10,13 @@
     position: relative;
 }
 
+.popup{
+    background: #00cc00;
+    padding: 10px;
+    border-radius: 10px;
+    font-weight: bold;
+}
+
 .greenTheme {
     background-color: #000;
     color: #aaffaa;
@@ -206,7 +213,11 @@ input:checked + .slider:before {
     text-shadow: 0px 0px 10px rgba(0, 170, 255, 0.8);
     margin-bottom: 10px;
 }
-  
+
+.walletContainer{
+    margin-left: 40px;
+}
+
 .walletAddress {
     font-size: 1.2rem;
     color: #ccc;
@@ -368,5 +379,3 @@ input:checked + .slider:before {
   .logoutButton:hover {
     background-color: #cc0000;
   }
-  
-  

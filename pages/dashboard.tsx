@@ -16,6 +16,7 @@ const Dashboard = () => {
   const [copied, setCopied] = useState(false);
   const { isDeveloperTheme, toggleTheme, setUserWallets } = useStablePay();
   const { ready, authenticated, logout } = usePrivy();
+  const [popupMessage, setPopupMessage] = useState("");
 
   useEffect(() => {
     if (ready && !authenticated) {
@@ -36,8 +37,15 @@ const Dashboard = () => {
     setTimeout(() => setCopied(false), 2000);
   };
 
+  const handleToggleTheme = () => {
+    toggleTheme();
+    setPopupMessage(isDeveloperTheme ? "Developer Mode Off" : "Developer Mode On");
+    setTimeout(() => setPopupMessage(""), 1100);
+  };
+
   return (
     <div className={`${styles.container} ${isDeveloperTheme ? styles.greenTheme : ""}`}>
+      {popupMessage && <div className={styles.popup}>{popupMessage}</div>}
       {ready && authenticated ? (
         <div>
           <div className="flex flex-row justify-between">
@@ -50,7 +58,7 @@ const Dashboard = () => {
 
             <div className={styles.notificationContainer}>
               <label className={styles.toggleSwitch}>
-                <input type="checkbox" checked={isDeveloperTheme} onChange={toggleTheme} />
+                <input type="checkbox" checked={isDeveloperTheme} onChange={handleToggleTheme} />
                 <span className={styles.slider}></span>
               </label>
               <button className={styles.logoutButton} onClick={logout}>
