@@ -9,6 +9,7 @@ The idea was to create an app powered by privy that allows payment through stabl
 
 1. Privy has been used in our app to allow users to login through their emails or their wallets providing a significantly level of account abstraction 
 2. Privy has also been used to create transactions of sending stable coins from your wallet to someone else
+3. Privy also enables users to seamlessly fund their own wallets through multiple means
 
 ## Key Features
 - **Login through email or wallet using privy** : You can use the power of privy to seamlessly login through your email id or through an existing wallet of yours.
